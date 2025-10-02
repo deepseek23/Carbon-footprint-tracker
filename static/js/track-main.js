@@ -10,8 +10,6 @@ document.addEventListener('DOMContentLoaded', function() {
   // Initialize the tracker
   initializeTracker();
   
-  // Initialize charts
-  initializeCharts();
   
   // Set up event listeners
   setupEventListeners();
@@ -21,9 +19,6 @@ function initializeTracker() {
   // Set today's date as default
   const today = new Date().toISOString().split('T')[0];
   carbonTracker.setCurrentDate(today);
-  
-  // Update summary stats
-  updateSummaryStats();
   
   // Load initial data
   carbonTracker.loadDateData();
@@ -76,23 +71,69 @@ function switchTab(tabName) {
 }
 
 function updateCurrentSectionDisplay(section) {
-  const sectionText = document.getElementById('currentSectionText');
+  const sectionTitle = document.getElementById('sectionTitle');
+  const sectionIcon = document.getElementById('sectionIcon');
   const sectionEmissions = document.getElementById('currentSectionEmissions');
   
-  if (sectionText && sectionEmissions) {
+  if (sectionTitle && sectionIcon && sectionEmissions) {
     const dayData = carbonTracker.getCurrentDateData();
     const emissions = dayData.emissions[section] || 0;
     
-    const sectionNames = {
-      transportation: 'Transportation',
-      food: 'Food & Diet',
-      energy: 'Energy & Utilities',
-      shopping: 'Shopping',
-      waste: 'Waste & Recycling',
-      other: 'Other Activities'
+    const sectionConfig = {
+      transportation: {
+        name: 'Transportation',
+        icon: 'fas fa-car',
+        gradient: 'from-blue-500 to-purple-500'
+      },
+      food: {
+        name: 'Food & Diet',
+        icon: 'fas fa-utensils',
+        gradient: 'from-orange-500 to-red-500'
+      },
+      energy: {
+        name: 'Energy & Utilities',
+        icon: 'fas fa-plug',
+        gradient: 'from-yellow-500 to-orange-500'
+      },
+      shopping: {
+        name: 'Shopping',
+        icon: 'fas fa-shopping-cart',
+        gradient: 'from-green-500 to-blue-500'
+      },
+      waste: {
+        name: 'Waste & Recycling',
+        icon: 'fas fa-recycle',
+        gradient: 'from-purple-500 to-pink-500'
+      }
     };
     
-    sectionText.innerHTML = `${sectionNames[section]}: <span id="currentSectionEmissions" class="text-blue-600">${emissions.toFixed(1)}</span> kg CO₂`;
+    const config = sectionConfig[section];
+    if (config) {
+      sectionTitle.textContent = config.name;
+      sectionIcon.className = `inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br ${config.gradient} rounded-full mb-3`;
+      sectionIcon.innerHTML = `<i class="${config.icon} text-white text-2xl"></i>`;
+      sectionEmissions.textContent = emissions.toFixed(1);
+    }
+    
+    // Show/hide appropriate section details
+    showSectionDetails(section);
+  }
+}
+
+function showSectionDetails(section) {
+  // Hide all section details
+  const detailSections = ['transportDetails', 'foodDetails', 'energyDetails', 'shoppingDetails', 'wasteDetails'];
+  detailSections.forEach(id => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.classList.add('hidden');
+    }
+  });
+  
+  // Show current section details
+  const currentDetails = document.getElementById(section + 'Details');
+  if (currentDetails) {
+    currentDetails.classList.remove('hidden');
   }
 }
 
@@ -248,9 +289,6 @@ function saveCurrentData() {
     button.innerHTML = originalText;
     button.classList.remove('bg-green-500');
   }, 2000);
-  
-  // Update summary stats
-  updateSummaryStats();
 }
 
 function copyPreviousDay() {
@@ -264,95 +302,6 @@ function viewHistory() {
   alert('History view would open here. This feature requires backend integration.');
 }
 
-// Summary Statistics
-function updateSummaryStats() {
-  const weeklyData = carbonTracker.getWeeklyData();
-  const monthlyTotal = carbonTracker.getMonthlyTotal();
-  
-  // Calculate weekly average
-  const weeklyTotal = weeklyData.reduce((sum, day) => sum + day.emissions, 0);
-  const weeklyAvg = weeklyTotal / 7;
-  
-  // Update displays
-  carbonTracker.updateElement('weeklyAvg', weeklyAvg.toFixed(1));
-  carbonTracker.updateElement('monthlyTotal', monthlyTotal.toFixed(1));
-  
-  // Calculate target progress (monthly)
-  const monthlyTarget = carbonTracker.dailyTargets.total * 30; // Assume 30 days
-  const targetProgress = Math.min((monthlyTotal / monthlyTarget) * 100, 100);
-  carbonTracker.updateElement('targetProgress', targetProgress.toFixed(0) + '%');
-  
-  // Update weekly trend chart
-  updateWeeklyChart(weeklyData);
-}
-
-// Chart Management
-let weeklyChart = null;
-
-function initializeCharts() {
-  const ctx = document.getElementById('weeklyTrendChart');
-  if (!ctx) return;
-  
-  weeklyChart = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: [],
-      datasets: [{
-        label: 'Daily Emissions (kg CO₂)',
-        data: [],
-        borderColor: '#27ae60',
-        backgroundColor: 'rgba(39, 174, 96, 0.1)',
-        borderWidth: 3,
-        fill: true,
-        tension: 0.4
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          display: false
-        }
-      },
-      scales: {
-        x: {
-          display: false
-        },
-        y: {
-          beginAtZero: true,
-          max: 20,
-          ticks: {
-            font: {
-              size: 10
-            }
-          }
-        }
-      },
-      elements: {
-        point: {
-          radius: 4,
-          hoverRadius: 6
-        }
-      }
-    }
-  });
-}
-
-function updateWeeklyChart(weeklyData) {
-  if (!weeklyChart) return;
-  
-  const labels = weeklyData.map(day => {
-    const date = new Date(day.date);
-    return date.toLocaleDateString('en-US', { weekday: 'short' });
-  });
-  
-  const data = weeklyData.map(day => day.emissions);
-  
-  weeklyChart.data.labels = labels;
-  weeklyChart.data.datasets[0].data = data;
-  weeklyChart.update();
-}
 
 // Utility Functions
 function formatDate(dateString) {

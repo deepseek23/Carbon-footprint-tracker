@@ -96,16 +96,12 @@ class CarbonTracker {
         recycling: 0,
         compost: 0
       },
-      other: {
-        activities: []
-      },
       emissions: {
         transport: 0,
         food: 0,
         energy: 0,
         shopping: 0,
         waste: 0,
-        other: 0,
         total: 0
       }
     };
@@ -274,26 +270,13 @@ class CarbonTracker {
     return dayData.emissions.waste;
   }
 
-  calculateOtherEmissions() {
-    const dayData = this.getCurrentDateData();
-    let total = 0;
-
-    dayData.other.activities.forEach(activity => {
-      total += activity.emissions || 0;
-    });
-
-    dayData.emissions.other = total;
-    return total;
-  }
-
   calculateAllEmissions() {
     const emissions = {
       transport: this.calculateTransportEmissions(),
       food: this.calculateFoodEmissions(),
       energy: this.calculateEnergyEmissions(),
       shopping: this.calculateShoppingEmissions(),
-      waste: this.calculateWasteEmissions(),
-      other: this.calculateOtherEmissions()
+      waste: this.calculateWasteEmissions()
     };
 
     emissions.total = Object.values(emissions).reduce((sum, val) => sum + val, 0);
@@ -402,37 +385,6 @@ class CarbonTracker {
     }
   }
 
-  // History and Analytics
-  getWeeklyData() {
-    const weekData = [];
-    for (let i = 6; i >= 0; i--) {
-      const date = new Date();
-      date.setDate(date.getDate() - i);
-      const dateStr = date.toISOString().split('T')[0];
-      const dayData = this.data[dateStr];
-      weekData.push({
-        date: dateStr,
-        emissions: dayData ? dayData.emissions.total : 0
-      });
-    }
-    return weekData;
-  }
-
-  getMonthlyTotal() {
-    const now = new Date();
-    const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
-    let total = 0;
-    
-    for (let d = new Date(firstDay); d <= now; d.setDate(d.getDate() + 1)) {
-      const dateStr = d.toISOString().split('T')[0];
-      const dayData = this.data[dateStr];
-      if (dayData) {
-        total += dayData.emissions.total;
-      }
-    }
-    
-    return total;
-  }
 
   copyPreviousDay() {
     const yesterday = new Date(this.currentDate);
