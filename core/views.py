@@ -355,3 +355,5 @@ def ai_tips_api(request):
         },
         "level": level,
     })
+from django.shortcuts import render
+

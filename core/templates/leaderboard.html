@@ -1,0 +1,106 @@
+{% extends "layout.html" %}
+
+{% block title %}Leaderboard | Carbon Tracker{% endblock %}
+
+{% block content %}
+<!-- CDN Scripts for Tailwind & Particles.js -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+
+<div class="bg-white text-black">
+
+  <!-- Hero Section with Particles -->
+  <section class="relative h-96 flex flex-col items-center justify-center text-center px-6 overflow-hidden">
+    <div id="particles-js" class="absolute inset-0"></div>
+    <h1 class="text-5xl font-extrabold text-black drop-shadow-lg z-10">
+      🌍 Global Eco-Leaderboard
+    </h1>
+    <p class="mt-4 text-lg text-gray-500 z-10 max-w-2xl">
+      See top users making the biggest positive impact on the planet.
+    </p>
+  </section>
+
+  <!-- Top 3 Users Cards -->
+  <section class="py-16 px-8 max-w-5xl mx-auto">
+    <h3 class="text-4xl font-bold text-center mb-12 text-black">🏆 Top Contributors</h3>
+    <div class="grid md:grid-cols-3 gap-8">
+      {% for user in leaderboard|slice:":3" %}
+      <div class="bg-white rounded-2xl border border-green-500/30 p-6 shadow-xl hover:scale-105 transition transform text-center">
+        <h4 class="text-2xl font-bold text-green-700 mb-2">{{ user.name }}</h4>
+        <p class="text-gray-600 mb-4">Carbon Saved: <span class="font-semibold">{{ user.co2_saved }} kg</span></p>
+        <p class="text-gray-500">Eco Score: <span class="font-semibold">{{ user.eco_score }}</span></p>
+      </div>
+      {% empty %}
+      <p class="text-center text-gray-500 col-span-3">No top contributors yet.</p>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- Full Leaderboard Table -->
+  <section class="py-16 px-8 max-w-5xl mx-auto">
+    <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+      <table class="min-w-full text-left">
+        <thead class="bg-green-500 text-white">
+          <tr>
+            <th class="py-3 px-6">Rank</th>
+            <th class="py-3 px-6">User</th>
+            <th class="py-3 px-6">Carbon Saved (kg CO₂)</th>
+            <th class="py-3 px-6">Eco Score</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200">
+          {% for user in leaderboard %}
+          <tr class="hover:bg-green-50 transition">
+            <td class="py-4 px-6 font-semibold">{{ forloop.counter }}</td>
+            <td class="py-4 px-6">{{ user.name }}</td>
+            <td class="py-4 px-6">{{ user.co2_saved }}</td>
+            <td class="py-4 px-6">{{ user.eco_score }}</td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="4" class="py-6 text-center text-gray-500">No users found</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</div>
+
+<!-- Particle Background Script -->
+<script>
+particlesJS("particles-js", {
+  "particles": {
+    "number": { "value": 80 },
+    "color": { "value": "#16a34a" },
+    "shape": { "type": "circle" },
+    "opacity": { "value": 0.8 },
+    "size": { "value": 4 },
+    "line_linked": { 
+      "enable": true, 
+      "distance": 150, 
+      "color": "#16a34a",
+      "opacity": 0.6,
+      "width": 1.2
+    },
+    "move": { "enable": true, "speed": 2, "direction": "none", "out_mode": "out" }
+  },
+  "interactivity": {
+    "detect_on": "canvas",
+    "events": {
+      "onhover": { "enable": true, "mode": ["grab", "bubble"] },
+      "onclick": { "enable": true, "mode": ["push", "repulse"] },
+      "resize": true
+    },
+    "modes": {
+      "grab": { "distance": 180, "line_linked": { "opacity": 0.9 } },
+      "bubble": { "distance": 200, "size": 8, "duration": 2, "opacity": 0.9, "speed": 3 },
+      "repulse": { "distance": 200, "duration": 0.4 },
+      "push": { "particles_nb": 4 }
+    }
+  },
+  "retina_detect": true
+});
+</script>
+{% endblock %}
