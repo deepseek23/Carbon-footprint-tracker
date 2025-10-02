@@ -561,125 +561,310 @@
 
     <!-- Food & Diet Tab -->
     <div id="food" class="tab-content">
-      <div class="grid lg:grid-cols-3 gap-8">
-        <div class="lg:col-span-2 space-y-6" data-aos="fade-right">
+      <div class="grid lg:grid-cols-2 gap-12">
+        <!-- Input Section -->
+        <div class="space-y-8" data-aos="fade-right">
           <div class="bg-white rounded-3xl p-8 shadow-lg border border-orange-100">
-            <h3 class="text-2xl font-bold text-slate-800 mb-6">
-              <i class="fas fa-utensils text-orange-500 mr-3"></i>
-              Food & Diet 🍲🥩🥦
-            </h3>
-            
-            <!-- Meals per Week -->
+            <!-- Section Header -->
             <div class="mb-8">
-              <h4 class="text-lg font-semibold text-slate-700 mb-4">Meals per Week by Type</h4>
-              <div class="grid md:grid-cols-2 gap-4">
-                <div>
-                  <label class="block text-sm font-medium text-slate-600 mb-2">Vegetarian meals</label>
-                  <input type="range" min="0" max="21" value="10" class="slider mb-2" id="vegMeals" oninput="updateFoodValue('veg', this.value)">
-                  <div class="text-center text-sm text-slate-500" id="vegValue">10 meals</div>
+              <h3 class="text-3xl font-bold text-slate-800 mb-3">
+                <i class="fas fa-utensils text-orange-500 mr-3"></i>
+                Food & Diet
+              </h3>
+              <p class="text-lg text-slate-600">Track your meals and discover how your diet impacts your carbon footprint.</p>
+            </div>
+            
+            <!-- Weekly Meal Tracker -->
+            <div class="mb-10">
+              <h4 class="text-xl font-semibold text-slate-700 mb-6 flex items-center">
+                <i class="fas fa-calendar-week text-green-500 mr-2"></i>
+                Weekly Meal Tracker
+              </h4>
+              
+              <!-- Meat Section -->
+              <div class="mb-8 bg-red-50 rounded-xl p-6">
+                <h5 class="text-lg font-semibold text-slate-700 mb-4 flex items-center">
+                  <span class="text-2xl mr-2">🥩</span>
+                  Meat
+                </h5>
+                <div class="space-y-6">
+                  <div>
+                    <div class="flex justify-between items-center mb-2">
+                      <label class="text-sm font-medium text-slate-600">Beef meals per week</label>
+                      <div class="flex items-center gap-2">
+                        <span class="text-lg font-bold text-red-600" id="beefValue">2</span>
+                        <span class="text-sm text-slate-500">meals</span>
+                        <span class="text-sm font-semibold text-red-600" id="beefCO2">13.6 kg CO₂</span>
+                      </div>
+                    </div>
+                    <input type="range" min="0" max="14" value="2" class="slider w-full" id="beefSlider" 
+                           oninput="updateFoodSlider('beef', this.value)">
+                  </div>
+                  
+                  <div>
+                    <div class="flex justify-between items-center mb-2">
+                      <label class="text-sm font-medium text-slate-600">Chicken meals per week</label>
+                      <div class="flex items-center gap-2">
+                        <span class="text-lg font-bold text-orange-600" id="chickenValue">4</span>
+                        <span class="text-sm text-slate-500">meals</span>
+                        <span class="text-sm font-semibold text-orange-600" id="chickenCO2">8.4 kg CO₂</span>
+                      </div>
+                    </div>
+                    <input type="range" min="0" max="14" value="4" class="slider w-full" id="chickenSlider" 
+                           oninput="updateFoodSlider('chicken', this.value)">
+                  </div>
+                  
+                  <div>
+                    <div class="flex justify-between items-center mb-2">
+                      <label class="text-sm font-medium text-slate-600">Pork meals per week</label>
+                      <div class="flex items-center gap-2">
+                        <span class="text-lg font-bold text-pink-600" id="porkValue">1</span>
+                        <span class="text-sm text-slate-500">meals</span>
+                        <span class="text-sm font-semibold text-pink-600" id="porkCO2">3.2 kg CO₂</span>
+                      </div>
+                    </div>
+                    <input type="range" min="0" max="14" value="1" class="slider w-full" id="porkSlider" 
+                           oninput="updateFoodSlider('pork', this.value)">
+                  </div>
                 </div>
-                <div>
-                  <label class="block text-sm font-medium text-slate-600 mb-2">Chicken meals</label>
-                  <input type="range" min="0" max="21" value="5" class="slider mb-2" id="chickenMeals" oninput="updateFoodValue('chicken', this.value)">
-                  <div class="text-center text-sm text-slate-500" id="chickenValue">5 meals</div>
+              </div>
+
+              <!-- Dairy Section -->
+              <div class="mb-8 bg-blue-50 rounded-xl p-6">
+                <h5 class="text-lg font-semibold text-slate-700 mb-4 flex items-center">
+                  <span class="text-2xl mr-2">🥛</span>
+                  Dairy
+                </h5>
+                <div class="space-y-6">
+                  <div>
+                    <div class="flex justify-between items-center mb-2">
+                      <label class="text-sm font-medium text-slate-600">Milk servings per week</label>
+                      <div class="flex items-center gap-2">
+                        <span class="text-lg font-bold text-blue-600" id="milkValue">7</span>
+                        <span class="text-sm text-slate-500">servings</span>
+                        <span class="text-sm font-semibold text-blue-600" id="milkCO2">2.1 kg CO₂</span>
+                      </div>
+                    </div>
+                    <input type="range" min="0" max="21" value="7" class="slider w-full" id="milkSlider" 
+                           oninput="updateFoodSlider('milk', this.value)">
+                  </div>
+                  
+                  <div>
+                    <div class="flex justify-between items-center mb-2">
+                      <label class="text-sm font-medium text-slate-600">Cheese servings per week</label>
+                      <div class="flex items-center gap-2">
+                        <span class="text-lg font-bold text-yellow-600" id="cheeseValue">3</span>
+                        <span class="text-sm text-slate-500">servings</span>
+                        <span class="text-sm font-semibold text-yellow-600" id="cheeseCO2">2.7 kg CO₂</span>
+                      </div>
+                    </div>
+                    <input type="range" min="0" max="14" value="3" class="slider w-full" id="cheeseSlider" 
+                           oninput="updateFoodSlider('cheese', this.value)">
+                  </div>
                 </div>
+              </div>
+
+              <!-- Vegetarian/Vegan Section -->
+              <div class="mb-8 bg-green-50 rounded-xl p-6">
+                <h5 class="text-lg font-semibold text-slate-700 mb-4 flex items-center">
+                  <span class="text-2xl mr-2">🥦</span>
+                  Plant-Based
+                </h5>
                 <div>
-                  <label class="block text-sm font-medium text-slate-600 mb-2">Beef meals</label>
-                  <input type="range" min="0" max="21" value="2" class="slider mb-2" id="beefMeals" oninput="updateFoodValue('beef', this.value)">
-                  <div class="text-center text-sm text-slate-500" id="beefValue">2 meals</div>
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-slate-600 mb-2">Dairy products (servings/week)</label>
-                  <input type="range" min="0" max="35" value="14" class="slider mb-2" id="dairyMeals" oninput="updateFoodValue('dairy', this.value)">
-                  <div class="text-center text-sm text-slate-500" id="dairyValue">14 servings</div>
+                  <div class="flex justify-between items-center mb-2">
+                    <label class="text-sm font-medium text-slate-600">Vegetarian/Vegan meals per week</label>
+                    <div class="flex items-center gap-2">
+                      <span class="text-lg font-bold text-green-600" id="vegValue">7</span>
+                      <span class="text-sm text-slate-500">meals</span>
+                      <span class="text-sm font-semibold text-green-600" id="vegCO2">1.4 kg CO₂</span>
+                    </div>
+                  </div>
+                  <input type="range" min="0" max="21" value="7" class="slider w-full" id="vegSlider" 
+                         oninput="updateFoodSlider('veg', this.value)">
                 </div>
               </div>
             </div>
 
-            <!-- Restaurant vs Home-cooked -->
-            <div class="mb-8">
-              <h4 class="text-lg font-semibold text-slate-700 mb-4">Restaurant vs Home-cooked</h4>
-              <div class="grid md:grid-cols-2 gap-4">
-                <div>
-                  <label class="block text-sm font-medium text-slate-600 mb-2">Restaurant meals/week</label>
-                  <input type="number" placeholder="0" class="form-input" id="restaurantMeals" oninput="updateCalculation()">
+            <!-- Dish Carbon Calculator -->
+            <div class="mb-10">
+              <h4 class="text-xl font-semibold text-slate-700 mb-6 flex items-center">
+                <i class="fas fa-calculator text-purple-500 mr-2"></i>
+                Dish Carbon Calculator
+              </h4>
+              <div class="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-6">
+                <div class="grid md:grid-cols-3 gap-4 mb-4">
+                  <div class="md:col-span-2">
+                    <label class="block text-sm font-medium text-slate-600 mb-2">Enter a dish name</label>
+                    <input type="text" placeholder="e.g., butter chicken, beef burger, quinoa salad" 
+                           class="form-input" id="dishInput" oninput="calculateDishCarbon()">
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-slate-600 mb-2">Meal type</label>
+                    <select class="form-select" id="mealType" onchange="calculateDishCarbon()">
+                      <option value="breakfast">Breakfast</option>
+                      <option value="lunch" selected>Lunch</option>
+                      <option value="dinner">Dinner</option>
+                    </select>
+                  </div>
                 </div>
-                <div>
-                  <label class="block text-sm font-medium text-slate-600 mb-2">Home-cooked meals/week</label>
-                  <input type="number" placeholder="21" class="form-input" id="homeMeals" oninput="updateCalculation()">
+                <div class="text-center p-4 bg-white rounded-lg">
+                  <div class="text-2xl font-bold text-purple-600" id="dishCarbon">0.0</div>
+                  <div class="text-sm text-slate-600">Estimated footprint: kg CO₂/meal</div>
                 </div>
+              </div>
+            </div>
+
+            <!-- Restaurant vs Home-Cooked -->
+            <div class="mb-10">
+              <h4 class="text-xl font-semibold text-slate-700 mb-6 flex items-center">
+                <i class="fas fa-home text-blue-500 mr-2"></i>
+                Cooking Style
+              </h4>
+              <div class="bg-blue-50 rounded-xl p-6">
+                <div class="flex items-center justify-between mb-4">
+                  <span class="font-medium text-slate-700">Mostly Home-Cooked</span>
+                  <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" class="sr-only peer" id="cookingToggle" onchange="toggleCookingStyle()">
+                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600"></div>
+                  </label>
+                  <span class="font-medium text-slate-700">Mostly Restaurant</span>
+                </div>
+                <p class="text-sm text-slate-600 text-center" id="cookingImpact">
+                  Home-cooked meals typically have 20% lower carbon footprint
+                </p>
               </div>
             </div>
 
             <!-- Local vs Imported -->
             <div class="mb-8">
-              <h4 class="text-lg font-semibold text-slate-700 mb-4">Produce Source</h4>
-              <div class="flex items-center gap-4">
-                <label class="flex items-center">
-                  <input type="radio" name="produce" value="local" class="mr-2" onchange="updateCalculation()">
-                  <span>Mostly Local</span>
-                </label>
-                <label class="flex items-center">
-                  <input type="radio" name="produce" value="mixed" class="mr-2" checked onchange="updateCalculation()">
-                  <span>Mixed</span>
-                </label>
-                <label class="flex items-center">
-                  <input type="radio" name="produce" value="imported" class="mr-2" onchange="updateCalculation()">
-                  <span>Mostly Imported</span>
-                </label>
-              </div>
-            </div>
-
-            <!-- Food Carbon Calculator -->
-            <div class="mb-8 bg-gradient-to-r from-orange-50 to-red-50 rounded-xl p-6">
-              <h4 class="text-lg font-semibold text-slate-700 mb-4">
-                <i class="fas fa-calculator text-orange-500 mr-2"></i>
-                Food Carbon Calculator
+              <h4 class="text-xl font-semibold text-slate-700 mb-6 flex items-center">
+                <i class="fas fa-map-marker-alt text-green-500 mr-2"></i>
+                Produce Source
               </h4>
-              <div class="grid md:grid-cols-3 gap-4">
-                <div class="md:col-span-2">
-                  <input type="text" placeholder="e.g., butter chicken, beef burger, quinoa salad" 
-                         class="form-input" id="dishInput" oninput="calculateDishCarbon()">
+              <div class="bg-green-50 rounded-xl p-6">
+                <div class="flex items-center justify-between mb-4">
+                  <span class="font-medium text-slate-700">Local Produce</span>
+                  <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" class="sr-only peer" id="produceToggle" onchange="toggleProduceSource()">
+                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-600"></div>
+                  </label>
+                  <span class="font-medium text-slate-700">Imported Produce</span>
                 </div>
-                <div>
-                  <select class="form-select" id="dishPortion">
-                    <option value="small">Small</option>
-                    <option value="medium" selected>Medium</option>
-                    <option value="large">Large</option>
-                  </select>
-                </div>
-              </div>
-              <div class="mt-4 text-center">
-                <div class="text-2xl font-bold text-orange-600" id="dishCarbon">0.0</div>
-                <div class="text-sm text-slate-600">kg CO₂ for this dish</div>
+                <p class="text-sm text-slate-600 text-center" id="produceImpact">
+                  Local produce reduces transport emissions by up to 30%
+                </p>
               </div>
             </div>
           </div>
         </div>
-        
-        <!-- Results Panel (same as transportation) -->
+
+        <!-- Real-Time Food Feedback -->
         <div class="sticky top-8" data-aos="fade-left">
-          <div class="bg-gradient-to-br from-green-50 to-blue-50 rounded-3xl p-8 shadow-xl">
-            <h3 class="text-2xl font-bold text-slate-800 mb-6 text-center">Food Impact</h3>
-            <div class="progress-gauge mb-6">
-              <div class="relative z-10 text-center">
-                <div class="text-4xl font-black text-orange-600" id="foodTotalEmissions">8.5</div>
-                <div class="text-sm text-slate-600 font-medium">kg CO₂/day</div>
+          <div class="bg-gradient-to-br from-orange-50 to-red-50 rounded-3xl p-8 shadow-xl border border-orange-200">
+            <!-- Results Card Header -->
+            <div class="text-center mb-8">
+              <h3 class="text-2xl font-bold text-slate-800 mb-2">Weekly Diet Impact</h3>
+              <p class="text-lg text-orange-600 font-semibold" id="foodResultText">
+                Your weekly diet contributes <span id="foodWeeklyEmissions">31.4</span> kg CO₂
+              </p>
+            </div>
+            
+            <!-- Circular Progress Gauge -->
+            <div class="mb-8 flex justify-center">
+              <div class="relative w-48 h-48">
+                <svg class="w-48 h-48 transform -rotate-90" viewBox="0 0 100 100">
+                  <!-- Background circle -->
+                  <circle cx="50" cy="50" r="40" stroke="#fed7aa" stroke-width="8" fill="none"/>
+                  <!-- Progress circle -->
+                  <circle cx="50" cy="50" r="40" stroke="url(#foodGradient)" stroke-width="8" fill="none"
+                          stroke-dasharray="251.2" stroke-dashoffset="125.6" 
+                          id="foodProgressCircle" class="transition-all duration-500 ease-out"/>
+                  <!-- Gradient definition -->
+                  <defs>
+                    <linearGradient id="foodGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" style="stop-color:#f97316"/>
+                      <stop offset="100%" style="stop-color:#dc2626"/>
+                    </linearGradient>
+                  </defs>
+                </svg>
+                <!-- Center content -->
+                <div class="absolute inset-0 flex items-center justify-center">
+                  <div class="text-center">
+                    <div class="text-3xl font-black text-orange-600" id="foodGaugeValue">31.4</div>
+                    <div class="text-sm text-slate-600 font-medium">kg CO₂</div>
+                  </div>
+                </div>
               </div>
             </div>
-            <div class="space-y-3 text-sm">
-              <div class="flex justify-between">
-                <span>🥗 Vegetarian</span>
-                <span class="font-semibold text-green-600" id="vegEmissions">2.1 kg</span>
+
+            <!-- Food Category Breakdown -->
+            <div class="space-y-4 mb-8">
+              <h4 class="text-lg font-semibold text-slate-700 text-center mb-4">Breakdown by Category</h4>
+              
+              <div class="flex items-center justify-between p-3 bg-white rounded-lg shadow-sm">
+                <div class="flex items-center">
+                  <span class="text-2xl mr-3">🥩</span>
+                  <span class="font-medium text-slate-700">Meat</span>
+                </div>
+                <span class="font-bold text-red-600" id="meatTotalEmissions">25.2 kg</span>
               </div>
-              <div class="flex justify-between">
-                <span>🐟 Chicken</span>
-                <span class="font-semibold text-yellow-600" id="chickenEmissions">3.2 kg</span>
+              
+              <div class="flex items-center justify-between p-3 bg-white rounded-lg shadow-sm">
+                <div class="flex items-center">
+                  <span class="text-2xl mr-3">🥛</span>
+                  <span class="font-medium text-slate-700">Dairy</span>
+                </div>
+                <span class="font-bold text-blue-600" id="dairyTotalEmissions">4.8 kg</span>
               </div>
-              <div class="flex justify-between">
-                <span>🐄 Beef</span>
-                <span class="font-semibold text-red-600" id="beefEmissions">3.2 kg</span>
+              
+              <div class="flex items-center justify-between p-3 bg-white rounded-lg shadow-sm">
+                <div class="flex items-center">
+                  <span class="text-2xl mr-3">🥦</span>
+                  <span class="font-medium text-slate-700">Plant-Based</span>
+                </div>
+                <span class="font-bold text-green-600" id="vegTotalEmissions">1.4 kg</span>
               </div>
+            </div>
+
+            <!-- Food Pie Chart -->
+            <div class="mb-8">
+              <h4 class="text-lg font-semibold text-slate-700 text-center mb-4">Emissions Distribution</h4>
+              <div class="relative w-32 h-32 mx-auto">
+                <svg class="w-32 h-32 transform -rotate-90" viewBox="0 0 42 42">
+                  <!-- Meat slice (largest) -->
+                  <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#dc2626" stroke-width="3"
+                          stroke-dasharray="60 40" stroke-dashoffset="0" id="meatSlice"/>
+                  <!-- Dairy slice -->
+                  <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#2563eb" stroke-width="3"
+                          stroke-dasharray="15 85" stroke-dashoffset="-60" id="dairySlice"/>
+                  <!-- Veg slice -->
+                  <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#16a34a" stroke-width="3"
+                          stroke-dasharray="5 95" stroke-dashoffset="-75" id="vegSlice"/>
+                </svg>
+                <div class="absolute inset-0 flex items-center justify-center">
+                  <span class="text-xs font-semibold text-slate-600">Diet Mix</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="mb-6">
+              <div class="flex justify-between text-sm text-slate-600 mb-2">
+                <span>Weekly Target: 35.0 kg CO₂</span>
+                <span id="foodProgressPercentage">90%</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-3">
+                <div class="bg-gradient-to-r from-orange-500 to-red-500 h-3 rounded-full transition-all duration-500" 
+                     id="foodProgressBar" style="width: 90%"></div>
+              </div>
+            </div>
+
+            <!-- Quick Tips -->
+            <div class="bg-orange-50 border border-orange-200 rounded-xl p-4">
+              <h4 class="font-bold text-orange-700 mb-2">🌱 Diet Tip</h4>
+              <p class="text-sm text-orange-600" id="foodTip">
+                Replacing 1 beef meal with a plant-based option could save 6.8 kg CO₂ per week!
+              </p>
             </div>
           </div>
         </div>
@@ -997,6 +1182,183 @@
     tooltip.classList.toggle('invisible');
   }
 
+  // Food tracking functions
+  function updateFoodSlider(type, value) {
+    document.getElementById(type + 'Value').textContent = value;
+    updateFoodCalculation();
+  }
+
+  function updateFoodCalculation() {
+    // Get all food input values
+    const beef = parseFloat(document.getElementById('beefSlider').value) || 0;
+    const chicken = parseFloat(document.getElementById('chickenSlider').value) || 0;
+    const pork = parseFloat(document.getElementById('porkSlider').value) || 0;
+    const milk = parseFloat(document.getElementById('milkSlider').value) || 0;
+    const cheese = parseFloat(document.getElementById('cheeseSlider').value) || 0;
+    const veg = parseFloat(document.getElementById('vegSlider').value) || 0;
+
+    // Carbon emission factors (kg CO2 per meal/serving)
+    const foodEmissionFactors = {
+      beef: 6.8,      // kg CO2 per meal
+      chicken: 2.1,   // kg CO2 per meal
+      pork: 3.2,      // kg CO2 per meal
+      milk: 0.3,      // kg CO2 per serving
+      cheese: 0.9,    // kg CO2 per serving
+      veg: 0.2        // kg CO2 per meal
+    };
+
+    // Get modifiers
+    const isRestaurant = document.getElementById('cookingToggle').checked;
+    const isImported = document.getElementById('produceToggle').checked;
+    
+    const restaurantMultiplier = isRestaurant ? 1.2 : 1.0; // 20% higher for restaurant
+    const importMultiplier = isImported ? 1.3 : 1.0; // 30% higher for imported
+
+    // Calculate emissions for each category
+    const beefEmissions = beef * foodEmissionFactors.beef * restaurantMultiplier * importMultiplier;
+    const chickenEmissions = chicken * foodEmissionFactors.chicken * restaurantMultiplier * importMultiplier;
+    const porkEmissions = pork * foodEmissionFactors.pork * restaurantMultiplier * importMultiplier;
+    const milkEmissions = milk * foodEmissionFactors.milk * importMultiplier;
+    const cheeseEmissions = cheese * foodEmissionFactors.cheese * importMultiplier;
+    const vegEmissions = veg * foodEmissionFactors.veg * importMultiplier;
+
+    // Update individual CO2 displays
+    animateValue('beefCO2', beefEmissions.toFixed(1) + ' kg CO₂');
+    animateValue('chickenCO2', chickenEmissions.toFixed(1) + ' kg CO₂');
+    animateValue('porkCO2', porkEmissions.toFixed(1) + ' kg CO₂');
+    animateValue('milkCO2', milkEmissions.toFixed(1) + ' kg CO₂');
+    animateValue('cheeseCO2', cheeseEmissions.toFixed(1) + ' kg CO₂');
+    animateValue('vegCO2', vegEmissions.toFixed(1) + ' kg CO₂');
+
+    // Calculate totals by category
+    const meatTotal = beefEmissions + chickenEmissions + porkEmissions;
+    const dairyTotal = milkEmissions + cheeseEmissions;
+    const vegTotal = vegEmissions;
+    const grandTotal = meatTotal + dairyTotal + vegTotal;
+
+    // Update category totals
+    animateValue('meatTotalEmissions', meatTotal.toFixed(1) + ' kg');
+    animateValue('dairyTotalEmissions', dairyTotal.toFixed(1) + ' kg');
+    animateValue('vegTotalEmissions', vegTotal.toFixed(1) + ' kg');
+
+    // Update main displays
+    animateValue('foodWeeklyEmissions', grandTotal.toFixed(1));
+    animateValue('foodGaugeValue', grandTotal.toFixed(1));
+
+    // Update progress gauge
+    updateFoodProgressGauge(grandTotal);
+    
+    // Update progress bar
+    const weeklyTarget = 35.0;
+    const percentage = Math.min((grandTotal / weeklyTarget) * 100, 100);
+    document.getElementById('foodProgressPercentage').textContent = percentage.toFixed(0) + '%';
+    document.getElementById('foodProgressBar').style.width = percentage + '%';
+
+    // Update pie chart
+    updateFoodPieChart(meatTotal, dairyTotal, vegTotal);
+
+    // Update tip
+    updateFoodTip(beef, chicken, meatTotal, grandTotal);
+  }
+
+  function updateFoodProgressGauge(value) {
+    const maxValue = 50; // Max expected weekly food emissions
+    const percentage = Math.min(value / maxValue, 1);
+    const circumference = 251.2; // 2 * π * 40
+    const offset = circumference - (percentage * circumference);
+    
+    const circle = document.getElementById('foodProgressCircle');
+    if (circle) {
+      circle.style.strokeDashoffset = offset;
+    }
+  }
+
+  function updateFoodPieChart(meat, dairy, veg) {
+    const total = meat + dairy + veg || 1;
+    const meatPercent = (meat / total) * 100;
+    const dairyPercent = (dairy / total) * 100;
+    const vegPercent = (veg / total) * 100;
+
+    // Update pie chart slices
+    const circumference = 100; // Simplified for percentage
+    
+    document.getElementById('meatSlice').style.strokeDasharray = `${meatPercent} ${100 - meatPercent}`;
+    document.getElementById('dairySlice').style.strokeDasharray = `${dairyPercent} ${100 - dairyPercent}`;
+    document.getElementById('dairySlice').style.strokeDashoffset = `-${meatPercent}`;
+    document.getElementById('vegSlice').style.strokeDasharray = `${vegPercent} ${100 - vegPercent}`;
+    document.getElementById('vegSlice').style.strokeDashoffset = `-${meatPercent + dairyPercent}`;
+  }
+
+  function updateFoodTip(beef, chicken, meatTotal, grandTotal) {
+    const tipElement = document.getElementById('foodTip');
+    if (!tipElement) return;
+    
+    if (beef > 3) {
+      const savings = (beef * 6.8 * 0.8).toFixed(1);
+      tipElement.textContent = `Replacing 1 beef meal with a plant-based option could save ${savings} kg CO₂ per week!`;
+    } else if (meatTotal > grandTotal * 0.7) {
+      tipElement.textContent = 'Consider adding more plant-based meals to reduce your food carbon footprint.';
+    } else if (grandTotal < 20) {
+      tipElement.textContent = 'Excellent! Your diet has a relatively low carbon footprint.';
+    } else {
+      tipElement.textContent = 'Try choosing local, seasonal produce to further reduce your food emissions.';
+    }
+  }
+
+  function calculateDishCarbon() {
+    const dish = document.getElementById('dishInput').value.toLowerCase();
+    const mealType = document.getElementById('mealType').value;
+    
+    // Enhanced food carbon database
+    const dishDatabase = {
+      'beef': 6.8, 'burger': 5.2, 'steak': 7.5, 'meatball': 4.8,
+      'chicken': 2.1, 'turkey': 2.3, 'duck': 3.1,
+      'pork': 3.2, 'bacon': 4.1, 'ham': 3.5, 'sausage': 3.8,
+      'fish': 1.8, 'salmon': 2.2, 'tuna': 1.9, 'shrimp': 2.8,
+      'cheese': 2.8, 'milk': 0.3, 'butter': 3.2, 'cream': 2.1,
+      'egg': 1.1, 'pasta': 0.3, 'rice': 0.4, 'bread': 0.2,
+      'potato': 0.1, 'vegetable': 0.1, 'fruit': 0.1, 'salad': 0.2,
+      'quinoa': 0.2, 'tofu': 0.3, 'beans': 0.1, 'lentil': 0.1
+    };
+    
+    let emissions = 0;
+    Object.keys(dishDatabase).forEach(key => {
+      if (dish.includes(key)) {
+        emissions = Math.max(emissions, dishDatabase[key]);
+      }
+    });
+    
+    // Meal type multiplier
+    const mealMultiplier = mealType === 'dinner' ? 1.2 : mealType === 'breakfast' ? 0.8 : 1.0;
+    emissions *= mealMultiplier;
+    
+    document.getElementById('dishCarbon').textContent = emissions.toFixed(1);
+  }
+
+  function toggleCookingStyle() {
+    const toggle = document.getElementById('cookingToggle');
+    const impact = document.getElementById('cookingImpact');
+    
+    if (toggle.checked) {
+      impact.textContent = 'Restaurant meals typically have 20% higher carbon footprint';
+    } else {
+      impact.textContent = 'Home-cooked meals typically have 20% lower carbon footprint';
+    }
+    updateFoodCalculation();
+  }
+
+  function toggleProduceSource() {
+    const toggle = document.getElementById('produceToggle');
+    const impact = document.getElementById('produceImpact');
+    
+    if (toggle.checked) {
+      impact.textContent = 'Imported produce increases transport emissions by up to 30%';
+    } else {
+      impact.textContent = 'Local produce reduces transport emissions by up to 30%';
+    }
+    updateFoodCalculation();
+  }
+
   // Update slider values
   function updateValue(type, value) {
     document.getElementById(type + 'Value').textContent = value + ' km';
@@ -1137,6 +1499,8 @@
 
   // Initialize calculations
   updateCalculation();
+  updateFoodCalculation();
+  updateTransportCalculation();
 </script>
 
 {% endblock %}
