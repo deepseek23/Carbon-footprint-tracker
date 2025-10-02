@@ -232,6 +232,26 @@
   
   input[type="number"] {
     -moz-appearance: textfield;
+    appearance: textfield;
+  }
+  
+  /* Energy tab styling */
+  .energy-tab-btn {
+    color: #64748b;
+  }
+  
+  .energy-tab-btn.active {
+    background: white;
+    color: #1e293b;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+  
+  .energy-tab-content {
+    display: none;
+  }
+  
+  .energy-tab-content.active {
+    display: block;
   }
 </style>
 
@@ -873,57 +893,351 @@
 
     <!-- Energy Usage Tab -->
     <div id="energy" class="tab-content">
-      <div class="max-w-4xl mx-auto" data-aos="fade-up">
-        <div class="bg-white rounded-3xl p-8 shadow-lg border border-blue-100">
-          <h3 class="text-2xl font-bold text-slate-800 mb-6 text-center">
-            <i class="fas fa-camera text-blue-500 mr-2"></i>
-            Upload Your Receipts
-          </h3>
-          
-          <!-- Drag & Drop Area -->
-          <div class="drag-drop-area" id="dropArea" onclick="document.getElementById('fileInput').click()">
-            <div class="mb-4">
-              <i class="fas fa-cloud-upload-alt text-6xl text-slate-400"></i>
+      <div class="grid lg:grid-cols-2 gap-12">
+        <!-- Input Section -->
+        <div class="space-y-8" data-aos="fade-right">
+          <div class="bg-white rounded-3xl p-8 shadow-lg border border-yellow-100">
+            <!-- Section Header -->
+            <div class="mb-8">
+              <h3 class="text-3xl font-bold text-slate-800 mb-3">
+                <i class="fas fa-plug text-yellow-500 mr-3"></i>
+                Energy & Utilities
+              </h3>
+              <p class="text-lg text-slate-600">Log your household energy usage or upload your bills — our AI calculates your carbon footprint automatically.</p>
             </div>
-            <h4 class="text-xl font-semibold text-slate-700 mb-2">Drop receipts here or click to upload</h4>
-            <p class="text-slate-500 mb-4">Supports JPG, PNG, PDF files up to 10MB</p>
-            <div class="inline-flex items-center px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
-              <i class="fas fa-plus mr-2"></i>
-              Choose Files
+            
+            <!-- Input Method Toggle -->
+            <div class="mb-10">
+              <div class="flex bg-gray-100 rounded-xl p-1">
+                <button class="flex-1 py-3 px-6 rounded-lg font-semibold transition-all duration-300 energy-tab-btn active" 
+                        onclick="switchEnergyTab('manual')" id="manualTabBtn">
+                  <i class="fas fa-keyboard mr-2"></i>
+                  Manual Entry
+                </button>
+                <button class="flex-1 py-3 px-6 rounded-lg font-semibold transition-all duration-300 energy-tab-btn" 
+                        onclick="switchEnergyTab('upload')" id="uploadTabBtn">
+                  <i class="fas fa-upload mr-2"></i>
+                  Upload Bill
+                </button>
+              </div>
+            </div>
+
+            <!-- Manual Entry Tab -->
+            <div id="manualEntry" class="energy-tab-content active">
+              <!-- Electricity Consumption -->
+              <div class="mb-10">
+                <h4 class="text-xl font-semibold text-slate-700 mb-6 flex items-center">
+                  <span class="text-2xl mr-2">⚡</span>
+                  Electricity Consumption
+                </h4>
+                <div class="bg-yellow-50 rounded-xl p-6">
+                  <div class="mb-6">
+                    <div class="flex justify-between items-center mb-3">
+                      <label class="text-sm font-medium text-slate-600">Electricity used per month (kWh)</label>
+                      <div class="flex items-center gap-2">
+                        <span class="text-2xl font-bold text-yellow-600" id="electricityValue">300</span>
+                        <span class="text-sm text-slate-500">kWh</span>
+                        <span class="text-sm font-semibold text-yellow-600" id="electricityCO2">180.0 kg CO₂</span>
+                      </div>
+                    </div>
+                    <input type="range" min="0" max="1000" value="300" class="slider w-full mb-3" id="electricitySlider" 
+                           oninput="updateEnergySlider('electricity', this.value)">
+                    <div class="flex justify-between text-xs text-slate-500">
+                      <span>0 kWh</span>
+                      <span>1000 kWh</span>
+                    </div>
+                  </div>
+                  
+                  <div class="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <label class="block text-sm font-medium text-slate-600 mb-2">Manual Input (kWh)</label>
+                      <input type="number" min="0" max="1000" value="300" class="form-input" id="electricityInput" 
+                             oninput="updateEnergyFromInput('electricity', this.value)">
+                    </div>
+                    <div>
+                      <label class="block text-sm font-medium text-slate-600 mb-2">Electricity Source</label>
+                      <select class="form-select" id="electricitySource" onchange="updateEnergyCalculation()">
+                        <option value="grid">Grid (Mixed)</option>
+                        <option value="coal">Coal Power</option>
+                        <option value="gas">Natural Gas</option>
+                        <option value="renewable">Renewable</option>
+                        <option value="solar">Solar Panels</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Heating & Cooling -->
+              <div class="mb-10">
+                <h4 class="text-xl font-semibold text-slate-700 mb-6 flex items-center">
+                  <span class="text-2xl mr-2">🔥</span>
+                  Heating & Cooling
+                </h4>
+                <div class="bg-red-50 rounded-xl p-6">
+                  <div class="mb-6">
+                    <div class="flex justify-between items-center mb-3">
+                      <label class="text-sm font-medium text-slate-600">AC/Heater usage per day (hours)</label>
+                      <div class="flex items-center gap-2">
+                        <span class="text-2xl font-bold text-red-600" id="heatingValue">6</span>
+                        <span class="text-sm text-slate-500">hrs/day</span>
+                        <span class="text-sm font-semibold text-red-600" id="heatingCO2">54.0 kg CO₂</span>
+                      </div>
+                    </div>
+                    <input type="range" min="0" max="24" value="6" class="slider w-full mb-3" id="heatingSlider" 
+                           oninput="updateEnergySlider('heating', this.value)">
+                    <div class="flex justify-between text-xs text-slate-500">
+                      <span>0 hrs</span>
+                      <span>24 hrs</span>
+                    </div>
+                  </div>
+                  
+                  <div class="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <label class="block text-sm font-medium text-slate-600 mb-2">Manual Input (hours)</label>
+                      <input type="number" min="0" max="24" value="6" class="form-input" id="heatingInput" 
+                             oninput="updateEnergyFromInput('heating', this.value)">
+                    </div>
+                    <div>
+                      <label class="block text-sm font-medium text-slate-600 mb-2">Type</label>
+                      <select class="form-select" id="heatingType" onchange="updateEnergyCalculation()">
+                        <option value="electric">Electric</option>
+                        <option value="gas">Gas</option>
+                        <option value="other">Other</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Gas/Fuel Usage -->
+              <div class="mb-10">
+                <h4 class="text-xl font-semibold text-slate-700 mb-6 flex items-center">
+                  <span class="text-2xl mr-2">🏠</span>
+                  Gas / Fuel Usage
+                </h4>
+                <div class="bg-blue-50 rounded-xl p-6">
+                  <div class="mb-6">
+                    <div class="flex justify-between items-center mb-3">
+                      <label class="text-sm font-medium text-slate-600">Gas cylinder / LPG per month (kg)</label>
+                      <div class="flex items-center gap-2">
+                        <span class="text-2xl font-bold text-blue-600" id="gasValue">15</span>
+                        <span class="text-sm text-slate-500">kg</span>
+                        <span class="text-sm font-semibold text-blue-600" id="gasCO2">45.0 kg CO₂</span>
+                      </div>
+                    </div>
+                    <input type="range" min="0" max="50" value="15" class="slider w-full mb-3" id="gasSlider" 
+                           oninput="updateEnergySlider('gas', this.value)">
+                    <div class="flex justify-between text-xs text-slate-500">
+                      <span>0 kg</span>
+                      <span>50 kg</span>
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <label class="block text-sm font-medium text-slate-600 mb-2">Manual Input (kg)</label>
+                    <input type="number" min="0" max="50" value="15" class="form-input w-32" id="gasInput" 
+                           oninput="updateEnergyFromInput('gas', this.value)">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Renewable Energy -->
+              <div class="mb-8">
+                <h4 class="text-xl font-semibold text-slate-700 mb-6 flex items-center">
+                  <span class="text-2xl mr-2">🌱</span>
+                  Renewable Energy Options
+                </h4>
+                <div class="bg-green-50 rounded-xl p-6">
+                  <div class="flex items-center justify-between mb-4">
+                    <span class="font-medium text-slate-700">Do you use solar/wind energy?</span>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" class="sr-only peer" id="renewableToggle" onchange="toggleRenewable()">
+                      <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
+                    </label>
+                  </div>
+                  <p class="text-sm text-slate-600 text-center" id="renewableImpact">
+                    Renewable energy can reduce your carbon footprint by up to 80%
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Upload Bill Tab -->
+            <div id="uploadBill" class="energy-tab-content hidden">
+              <!-- Drag & Drop Area -->
+              <div class="mb-8">
+                <div class="drag-drop-area border-2 border-dashed border-yellow-300 rounded-xl p-8 text-center bg-yellow-50 hover:bg-yellow-100 transition-colors cursor-pointer" 
+                     id="energyDropArea" onclick="document.getElementById('energyFileInput').click()">
+                  <div class="mb-4">
+                    <i class="fas fa-file-upload text-6xl text-yellow-500 mb-4"></i>
+                    <h4 class="text-xl font-semibold text-slate-700 mb-2">Drop your energy bills here</h4>
+                    <p class="text-slate-500 mb-4">or click to browse files</p>
+                    <div class="text-sm text-slate-400">Supports PDF, JPG, PNG files</div>
+                  </div>
+                  <input type="file" id="energyFileInput" multiple accept=".pdf,.jpg,.jpeg,.png" style="display: none;" onchange="handleEnergyFiles(this.files)">
+                </div>
+              </div>
+
+              <!-- Upload Progress -->
+              <div id="energyUploadProgress" class="hidden mb-8">
+                <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-6">
+                  <div class="flex items-center justify-between mb-3">
+                    <span class="text-sm font-medium text-yellow-700">
+                      <i class="fas fa-robot mr-2"></i>
+                      AI Processing...
+                    </span>
+                    <span class="text-sm text-yellow-600" id="energyProgressText">0%</span>
+                  </div>
+                  <div class="w-full bg-yellow-200 rounded-full h-3">
+                    <div class="bg-yellow-600 h-3 rounded-full transition-all duration-300" id="energyProgressBar" style="width: 0%"></div>
+                  </div>
+                  <p class="text-xs text-yellow-600 mt-2">Extracting electricity usage, gas consumption, and billing period...</p>
+                </div>
+              </div>
+
+              <!-- Uploaded Files List -->
+              <div id="energyUploadedFiles" class="hidden mb-8">
+                <h4 class="text-lg font-semibold text-slate-700 mb-4">Uploaded Files</h4>
+                <div id="energyFilesList" class="space-y-3">
+                  <!-- Files will be added here dynamically -->
+                </div>
+              </div>
+
+              <!-- AI Extracted Data -->
+              <div id="energyExtractedData" class="hidden">
+                <h4 class="text-lg font-semibold text-slate-700 mb-4">
+                  <i class="fas fa-magic mr-2 text-purple-500"></i>
+                  AI Extracted Data
+                </h4>
+                <div class="bg-purple-50 border border-purple-200 rounded-xl p-6">
+                  <p class="text-sm text-purple-600 mb-4">
+                    <i class="fas fa-info-circle mr-1"></i>
+                    Review and edit the extracted values if needed
+                  </p>
+                  <div class="grid md:grid-cols-3 gap-4">
+                    <div>
+                      <label class="block text-sm font-medium text-slate-600 mb-2">Electricity (kWh)</label>
+                      <input type="number" class="form-input" id="extractedElectricity" oninput="updateFromExtracted()">
+                    </div>
+                    <div>
+                      <label class="block text-sm font-medium text-slate-600 mb-2">Gas Usage (kg)</label>
+                      <input type="number" class="form-input" id="extractedGas" oninput="updateFromExtracted()">
+                    </div>
+                    <div>
+                      <label class="block text-sm font-medium text-slate-600 mb-2">Billing Period</label>
+                      <input type="text" class="form-input" id="extractedPeriod" readonly>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-          
-          <input type="file" id="fileInput" multiple accept="image/*,.pdf" style="display: none;" onchange="handleFiles(this.files)">
-          
-          <!-- File Preview -->
-          <div id="filePreview" class="mt-8 grid grid-cols-2 md:grid-cols-3 gap-4" style="display: none;">
-            <!-- Files will be displayed here -->
-          </div>
-          
-          <!-- AI Processing Results -->
-          <div id="aiResults" class="mt-8 bg-green-50 border border-green-200 rounded-xl p-6" style="display: none;">
-            <h4 class="font-bold text-green-700 mb-4">
-              <i class="fas fa-robot mr-2"></i>
-              AI Analysis Complete
-            </h4>
-            <div class="space-y-3">
-              <div class="flex justify-between">
-                <span>Groceries (Organic foods)</span>
-                <span class="font-semibold text-green-600">2.3 kg CO₂</span>
+        </div>
+
+        <!-- Real-Time Energy Feedback -->
+        <div class="sticky top-8" data-aos="fade-left">
+          <div class="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-3xl p-8 shadow-xl border border-yellow-200">
+            <!-- Results Card Header -->
+            <div class="text-center mb-8">
+              <h3 class="text-2xl font-bold text-slate-800 mb-2">Monthly Energy Impact</h3>
+              <p class="text-lg text-yellow-600 font-semibold" id="energyResultText">
+                Your monthly energy footprint: <span id="energyMonthlyEmissions">279.0</span> kg CO₂
+              </p>
+            </div>
+            
+            <!-- Circular Progress Gauge -->
+            <div class="mb-8 flex justify-center">
+              <div class="relative w-48 h-48">
+                <svg class="w-48 h-48 transform -rotate-90" viewBox="0 0 100 100">
+                  <!-- Background circle -->
+                  <circle cx="50" cy="50" r="40" stroke="#fef3c7" stroke-width="8" fill="none"/>
+                  <!-- Progress circle -->
+                  <circle cx="50" cy="50" r="40" stroke="url(#energyGradient)" stroke-width="8" fill="none"
+                          stroke-dasharray="251.2" stroke-dashoffset="100.5" 
+                          id="energyProgressCircle" class="transition-all duration-500 ease-out"/>
+                  <!-- Gradient definition -->
+                  <defs>
+                    <linearGradient id="energyGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" style="stop-color:#f59e0b"/>
+                      <stop offset="100%" style="stop-color:#dc2626"/>
+                    </linearGradient>
+                  </defs>
+                </svg>
+                <!-- Center content -->
+                <div class="absolute inset-0 flex items-center justify-center">
+                  <div class="text-center">
+                    <div class="text-3xl font-black text-yellow-600" id="energyGaugeValue">279.0</div>
+                    <div class="text-sm text-slate-600 font-medium">kg CO₂</div>
+                  </div>
+                </div>
               </div>
-              <div class="flex justify-between">
-                <span>Fuel (Petrol station)</span>
-                <span class="font-semibold text-red-600">15.7 kg CO₂</span>
+            </div>
+
+            <!-- Energy Category Breakdown -->
+            <div class="space-y-4 mb-8">
+              <h4 class="text-lg font-semibold text-slate-700 text-center mb-4">Breakdown by Source</h4>
+              
+              <div class="flex items-center justify-between p-3 bg-white rounded-lg shadow-sm">
+                <div class="flex items-center">
+                  <span class="text-2xl mr-3">⚡</span>
+                  <span class="font-medium text-slate-700">Electricity</span>
+                </div>
+                <span class="font-bold text-yellow-600" id="electricityTotalEmissions">180.0 kg</span>
               </div>
-              <div class="flex justify-between">
-                <span>Restaurant (Local dining)</span>
-                <span class="font-semibold text-orange-600">4.1 kg CO₂</span>
+              
+              <div class="flex items-center justify-between p-3 bg-white rounded-lg shadow-sm">
+                <div class="flex items-center">
+                  <span class="text-2xl mr-3">🔥</span>
+                  <span class="font-medium text-slate-700">Heating/Cooling</span>
+                </div>
+                <span class="font-bold text-red-600" id="heatingTotalEmissions">54.0 kg</span>
               </div>
-              <hr class="my-3">
-              <div class="flex justify-between text-lg font-bold">
-                <span>Total Impact</span>
-                <span class="text-slate-800">22.1 kg CO₂</span>
+              
+              <div class="flex items-center justify-between p-3 bg-white rounded-lg shadow-sm">
+                <div class="flex items-center">
+                  <span class="text-2xl mr-3">🏠</span>
+                  <span class="font-medium text-slate-700">Gas/LPG</span>
+                </div>
+                <span class="font-bold text-blue-600" id="gasTotalEmissions">45.0 kg</span>
               </div>
+            </div>
+
+            <!-- Energy Stacked Bar Chart -->
+            <div class="mb-8">
+              <h4 class="text-lg font-semibold text-slate-700 text-center mb-4">Energy Mix</h4>
+              <div class="w-full bg-gray-200 rounded-full h-6 overflow-hidden">
+                <div class="h-full flex">
+                  <div class="bg-yellow-500 transition-all duration-500" id="electricityBar" style="width: 64.5%"></div>
+                  <div class="bg-red-500 transition-all duration-500" id="heatingBar" style="width: 19.4%"></div>
+                  <div class="bg-blue-500 transition-all duration-500" id="gasBar" style="width: 16.1%"></div>
+                </div>
+              </div>
+              <div class="flex justify-between text-xs text-slate-500 mt-2">
+                <span>⚡ Electricity</span>
+                <span>🔥 Heating</span>
+                <span>🏠 Gas</span>
+              </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="mb-6">
+              <div class="flex justify-between text-sm text-slate-600 mb-2">
+                <span>Monthly Target: 350.0 kg CO₂</span>
+                <span id="energyProgressPercentage">80%</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-3">
+                <div class="bg-gradient-to-r from-yellow-500 to-orange-500 h-3 rounded-full transition-all duration-500" 
+                     id="energyProgressBar" style="width: 80%"></div>
+              </div>
+            </div>
+
+            <!-- Quick Tips -->
+            <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-4">
+              <h4 class="font-bold text-yellow-700 mb-2">💡 Energy Tip</h4>
+              <p class="text-sm text-yellow-600" id="energyTip">
+                Switching to renewable energy could reduce your emissions by 144 kg CO₂ per month!
+              </p>
             </div>
           </div>
         </div>
@@ -1359,6 +1673,222 @@
     updateFoodCalculation();
   }
 
+  // Energy tracking functions
+  function switchEnergyTab(tabName) {
+    // Remove active class from all buttons
+    document.querySelectorAll('.energy-tab-btn').forEach(btn => {
+      btn.classList.remove('active', 'bg-white', 'text-slate-800', 'shadow-sm');
+      btn.classList.add('text-slate-600');
+    });
+    
+    // Hide all tab contents
+    document.querySelectorAll('.energy-tab-content').forEach(content => {
+      content.classList.add('hidden');
+      content.classList.remove('active');
+    });
+    
+    // Show selected tab content
+    document.getElementById(tabName === 'manual' ? 'manualEntry' : 'uploadBill').classList.remove('hidden');
+    document.getElementById(tabName === 'manual' ? 'manualEntry' : 'uploadBill').classList.add('active');
+    
+    // Add active class to clicked button
+    const activeBtn = document.getElementById(tabName === 'manual' ? 'manualTabBtn' : 'uploadTabBtn');
+    activeBtn.classList.add('active', 'bg-white', 'text-slate-800', 'shadow-sm');
+    activeBtn.classList.remove('text-slate-600');
+  }
+
+  function updateEnergySlider(type, value) {
+    document.getElementById(type + 'Value').textContent = value;
+    document.getElementById(type + 'Input').value = value;
+    updateEnergyCalculation();
+  }
+
+  function updateEnergyFromInput(type, value) {
+    if (value >= 0) {
+      document.getElementById(type + 'Slider').value = value;
+      document.getElementById(type + 'Value').textContent = value;
+      updateEnergyCalculation();
+    }
+  }
+
+  function updateEnergyCalculation() {
+    // Get all energy input values
+    const electricity = parseFloat(document.getElementById('electricitySlider').value) || 0;
+    const electricitySource = document.getElementById('electricitySource').value;
+    const heating = parseFloat(document.getElementById('heatingSlider').value) || 0;
+    const heatingType = document.getElementById('heatingType').value;
+    const gas = parseFloat(document.getElementById('gasSlider').value) || 0;
+    const hasRenewable = document.getElementById('renewableToggle').checked;
+
+    // Carbon emission factors
+    const electricityFactors = {
+      grid: 0.6,      // kg CO2 per kWh (mixed grid)
+      coal: 0.9,      // kg CO2 per kWh
+      gas: 0.4,       // kg CO2 per kWh
+      renewable: 0.1, // kg CO2 per kWh
+      solar: 0.05     // kg CO2 per kWh
+    };
+
+    const heatingFactors = {
+      electric: 0.3,  // kg CO2 per hour
+      gas: 0.2,       // kg CO2 per hour
+      other: 0.25     // kg CO2 per hour
+    };
+
+    const gasEmissionFactor = 3.0; // kg CO2 per kg LPG
+
+    // Calculate emissions
+    let electricityEmissions = electricity * electricityFactors[electricitySource];
+    const heatingEmissions = heating * heatingFactors[heatingType] * 30; // Monthly
+    const gasEmissions = gas * gasEmissionFactor;
+
+    // Apply renewable energy reduction
+    if (hasRenewable) {
+      electricityEmissions *= 0.2; // 80% reduction
+    }
+
+    const totalEmissions = electricityEmissions + heatingEmissions + gasEmissions;
+
+    // Update individual CO2 displays
+    animateValue('electricityCO2', electricityEmissions.toFixed(1) + ' kg CO₂');
+    animateValue('heatingCO2', heatingEmissions.toFixed(1) + ' kg CO₂');
+    animateValue('gasCO2', gasEmissions.toFixed(1) + ' kg CO₂');
+
+    // Update category totals
+    animateValue('electricityTotalEmissions', electricityEmissions.toFixed(1) + ' kg');
+    animateValue('heatingTotalEmissions', heatingEmissions.toFixed(1) + ' kg');
+    animateValue('gasTotalEmissions', gasEmissions.toFixed(1) + ' kg');
+
+    // Update main displays
+    animateValue('energyMonthlyEmissions', totalEmissions.toFixed(1));
+    animateValue('energyGaugeValue', totalEmissions.toFixed(1));
+
+    // Update progress gauge
+    updateEnergyProgressGauge(totalEmissions);
+    
+    // Update progress bar
+    const monthlyTarget = 350.0;
+    const percentage = Math.min((totalEmissions / monthlyTarget) * 100, 100);
+    document.getElementById('energyProgressPercentage').textContent = percentage.toFixed(0) + '%';
+    document.getElementById('energyProgressBar').style.width = percentage + '%';
+
+    // Update stacked bar chart
+    updateEnergyStackedBar(electricityEmissions, heatingEmissions, gasEmissions);
+
+    // Update tip
+    updateEnergyTip(electricitySource, hasRenewable, totalEmissions);
+  }
+
+  function updateEnergyProgressGauge(value) {
+    const maxValue = 500; // Max expected monthly energy emissions
+    const percentage = Math.min(value / maxValue, 1);
+    const circumference = 251.2; // 2 * π * 40
+    const offset = circumference - (percentage * circumference);
+    
+    const circle = document.getElementById('energyProgressCircle');
+    if (circle) {
+      circle.style.strokeDashoffset = offset;
+    }
+  }
+
+  function updateEnergyStackedBar(electricity, heating, gas) {
+    const total = electricity + heating + gas || 1;
+    const electricityPercent = (electricity / total) * 100;
+    const heatingPercent = (heating / total) * 100;
+    const gasPercent = (gas / total) * 100;
+
+    document.getElementById('electricityBar').style.width = electricityPercent + '%';
+    document.getElementById('heatingBar').style.width = heatingPercent + '%';
+    document.getElementById('gasBar').style.width = gasPercent + '%';
+  }
+
+  function updateEnergyTip(source, hasRenewable, totalEmissions) {
+    const tipElement = document.getElementById('energyTip');
+    if (!tipElement) return;
+    
+    if (source === 'coal' && !hasRenewable) {
+      tipElement.textContent = 'Switching to renewable energy could reduce your emissions by up to 80%!';
+    } else if (!hasRenewable && totalEmissions > 300) {
+      const savings = (totalEmissions * 0.6).toFixed(0);
+      tipElement.textContent = `Installing solar panels could save you ${savings} kg CO₂ per month!`;
+    } else if (hasRenewable) {
+      tipElement.textContent = 'Great job using renewable energy! Your carbon footprint is significantly reduced.';
+    } else if (totalEmissions < 200) {
+      tipElement.textContent = 'Excellent! Your energy usage has a low carbon footprint.';
+    } else {
+      tipElement.textContent = 'Consider upgrading to energy-efficient appliances to reduce your footprint.';
+    }
+  }
+
+  function toggleRenewable() {
+    const toggle = document.getElementById('renewableToggle');
+    const impact = document.getElementById('renewableImpact');
+    
+    if (toggle.checked) {
+      impact.textContent = 'Renewable energy is reducing your carbon footprint by up to 80%!';
+    } else {
+      impact.textContent = 'Renewable energy can reduce your carbon footprint by up to 80%';
+    }
+    updateEnergyCalculation();
+  }
+
+  function handleEnergyFiles(files) {
+    const progressDiv = document.getElementById('energyUploadProgress');
+    const filesDiv = document.getElementById('energyUploadedFiles');
+    const extractedDiv = document.getElementById('energyExtractedData');
+    const progressBar = document.getElementById('energyProgressBar');
+    const progressText = document.getElementById('energyProgressText');
+    
+    if (files.length === 0) return;
+    
+    // Show progress
+    progressDiv.classList.remove('hidden');
+    
+    // Simulate AI processing
+    let progress = 0;
+    const interval = setInterval(() => {
+      progress += Math.random() * 15;
+      if (progress >= 100) {
+        progress = 100;
+        clearInterval(interval);
+        
+        // Show extracted data after processing
+        setTimeout(() => {
+          progressDiv.classList.add('hidden');
+          filesDiv.classList.remove('hidden');
+          extractedDiv.classList.remove('hidden');
+          
+          // Simulate extracted values
+          document.getElementById('extractedElectricity').value = 285;
+          document.getElementById('extractedGas').value = 18;
+          document.getElementById('extractedPeriod').value = 'March 2024';
+          
+          // Update calculations with extracted data
+          updateFromExtracted();
+        }, 500);
+      }
+      
+      progressBar.style.width = progress + '%';
+      progressText.textContent = Math.round(progress) + '%';
+    }, 200);
+  }
+
+  function updateFromExtracted() {
+    const electricity = parseFloat(document.getElementById('extractedElectricity').value) || 0;
+    const gas = parseFloat(document.getElementById('extractedGas').value) || 0;
+    
+    // Update manual inputs
+    document.getElementById('electricitySlider').value = electricity;
+    document.getElementById('electricityInput').value = electricity;
+    document.getElementById('electricityValue').textContent = electricity;
+    
+    document.getElementById('gasSlider').value = gas;
+    document.getElementById('gasInput').value = gas;
+    document.getElementById('gasValue').textContent = gas;
+    
+    updateEnergyCalculation();
+  }
+
   // Update slider values
   function updateValue(type, value) {
     document.getElementById(type + 'Value').textContent = value + ' km';
@@ -1501,6 +2031,7 @@
   updateCalculation();
   updateFoodCalculation();
   updateTransportCalculation();
+  updateEnergyCalculation();
 </script>
 
 {% endblock %}
