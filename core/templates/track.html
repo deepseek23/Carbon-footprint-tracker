@@ -2034,6 +2034,398 @@
       </div>
     </div>
 
+    <!-- Other Activities Tab -->
+    <div id="other" class="tab-content">
+      <div class="grid lg:grid-cols-2 gap-12">
+        <!-- Input Section -->
+        <div class="space-y-8" data-aos="fade-right">
+          <div class="bg-white rounded-3xl p-8 shadow-lg border border-indigo-100">
+            <!-- Section Header -->
+            <div class="mb-8">
+              <h3 class="text-3xl font-bold text-slate-800 mb-3">
+                <i class="fas fa-plus-circle text-indigo-500 mr-3"></i>
+                Other Activities
+              </h3>
+              <p class="text-lg text-slate-600">Track additional lifestyle habits that affect your carbon footprint.</p>
+            </div>
+            
+            <!-- Manual Entry Panel -->
+            <div class="mb-10">
+              <h4 class="text-xl font-semibold text-slate-700 mb-6 flex items-center">
+                <i class="fas fa-keyboard text-indigo-500 mr-2"></i>
+                Manual Entry
+              </h4>
+
+              <!-- Water Usage -->
+              <div class="mb-10">
+                <h5 class="text-lg font-semibold text-slate-700 mb-6 flex items-center">
+                  <span class="text-2xl mr-2">💧</span>
+                  Water Usage
+                </h5>
+                <div class="bg-blue-50 rounded-xl p-6">
+                  <div class="mb-6">
+                    <div class="flex justify-between items-center mb-3">
+                      <label class="text-sm font-medium text-slate-600">Average water usage per day (liters)</label>
+                      <div class="flex items-center gap-2">
+                        <span class="text-2xl font-bold text-blue-600" id="waterValue">150</span>
+                        <span class="text-sm text-slate-500">L/day</span>
+                        <span class="text-sm font-semibold text-blue-600" id="waterCO2">10.5 kg CO₂</span>
+                      </div>
+                    </div>
+                    <input type="range" min="50" max="500" value="150" class="slider w-full mb-3" id="waterSlider" 
+                           oninput="updateOtherSlider('water', this.value)">
+                    <div class="flex justify-between text-xs text-slate-500">
+                      <span>50 L</span>
+                      <span>500 L</span>
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <label class="block text-sm font-medium text-slate-600 mb-2">Manual Input (liters)</label>
+                    <input type="number" min="50" max="500" value="150" class="form-input w-32" id="waterInput" 
+                           oninput="updateOtherFromInput('water', this.value)">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Events/Occasions -->
+              <div class="mb-10">
+                <h5 class="text-lg font-semibold text-slate-700 mb-6 flex items-center">
+                  <span class="text-2xl mr-2">🎉</span>
+                  Events / Occasions
+                </h5>
+                <div class="bg-pink-50 rounded-xl p-6">
+                  <div class="mb-6">
+                    <div class="flex justify-between items-center mb-3">
+                      <label class="text-sm font-medium text-slate-600">Number of events per month</label>
+                      <div class="flex items-center gap-2">
+                        <span class="text-2xl font-bold text-pink-600" id="eventsValue">2</span>
+                        <span class="text-sm text-slate-500">events</span>
+                        <span class="text-sm font-semibold text-pink-600" id="eventsCO2">24.0 kg CO₂</span>
+                      </div>
+                    </div>
+                    <input type="range" min="0" max="10" value="2" class="slider w-full mb-3" id="eventsSlider" 
+                           oninput="updateOtherSlider('events', this.value)">
+                    <div class="flex justify-between text-xs text-slate-500">
+                      <span>0 events</span>
+                      <span>10 events</span>
+                    </div>
+                  </div>
+                  
+                  <div class="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <label class="block text-sm font-medium text-slate-600 mb-2">Manual Input</label>
+                      <input type="number" min="0" max="10" value="2" class="form-input" id="eventsInput" 
+                             oninput="updateOtherFromInput('events', this.value)">
+                    </div>
+                    <div>
+                      <label class="block text-sm font-medium text-slate-600 mb-2">Event Type</label>
+                      <select class="form-select" id="eventsType" onchange="updateOtherCalculation()">
+                        <option value="wedding">Weddings</option>
+                        <option value="party">Parties</option>
+                        <option value="festival">Festivals</option>
+                        <option value="travel">Travel Events</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Travel/Miscellaneous Activities -->
+              <div class="mb-10">
+                <h5 class="text-lg font-semibold text-slate-700 mb-6 flex items-center">
+                  <span class="text-2xl mr-2">✈️</span>
+                  Travel / Miscellaneous Activities
+                </h5>
+                <div class="bg-purple-50 rounded-xl p-6">
+                  <div class="mb-6">
+                    <div class="flex justify-between items-center mb-3">
+                      <label class="text-sm font-medium text-slate-600">Distance traveled for leisure/holidays (km)</label>
+                      <div class="flex items-center gap-2">
+                        <span class="text-2xl font-bold text-purple-600" id="travelValue">500</span>
+                        <span class="text-sm text-slate-500">km</span>
+                        <span class="text-sm font-semibold text-purple-600" id="travelCO2">60.0 kg CO₂</span>
+                      </div>
+                    </div>
+                    <input type="range" min="0" max="2000" value="500" class="slider w-full mb-3" id="travelSlider" 
+                           oninput="updateOtherSlider('travel', this.value)">
+                    <div class="flex justify-between text-xs text-slate-500">
+                      <span>0 km</span>
+                      <span>2000 km</span>
+                    </div>
+                  </div>
+                  
+                  <div class="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <label class="block text-sm font-medium text-slate-600 mb-2">Manual Input (km)</label>
+                      <input type="number" min="0" max="2000" value="500" class="form-input" id="travelInput" 
+                             oninput="updateOtherFromInput('travel', this.value)">
+                    </div>
+                    <div>
+                      <label class="block text-sm font-medium text-slate-600 mb-2">Travel Mode</label>
+                      <select class="form-select" id="travelMode" onchange="updateOtherCalculation()">
+                        <option value="car">Car</option>
+                        <option value="bus">Bus</option>
+                        <option value="train">Train</option>
+                        <option value="flight">Flight</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Custom Activity Logger -->
+              <div class="mb-10">
+                <h5 class="text-lg font-semibold text-slate-700 mb-6 flex items-center">
+                  <span class="text-2xl mr-2">📝</span>
+                  Custom Activity Logger
+                </h5>
+                <div class="bg-yellow-50 rounded-xl p-6">
+                  <div class="grid md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                      <label class="block text-sm font-medium text-slate-600 mb-2">Activity Name</label>
+                      <input type="text" placeholder="e.g., Swimming, Gaming, Gardening" class="form-input" id="customActivityName" 
+                             oninput="updateCustomActivity()">
+                    </div>
+                    <div>
+                      <label class="block text-sm font-medium text-slate-600 mb-2">Estimated Usage/Frequency</label>
+                      <input type="number" min="0" placeholder="Hours per week" class="form-input" id="customActivityValue" 
+                             oninput="updateCustomActivity()">
+                    </div>
+                  </div>
+                  
+                  <div class="flex items-center justify-between mb-4">
+                    <span class="text-sm font-medium text-slate-600">Include in CO₂ calculation?</span>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" class="sr-only peer" id="customActivityToggle" onchange="updateCustomActivity()">
+                      <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-yellow-600"></div>
+                    </label>
+                  </div>
+                  
+                  <div class="bg-white rounded-lg p-3">
+                    <div class="flex items-center justify-between">
+                      <span class="text-sm font-medium text-slate-700" id="customActivityDisplay">No custom activity added</span>
+                      <span class="text-sm font-semibold text-yellow-600" id="customActivityCO2">0.0 kg CO₂</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Upload Option Panel -->
+            <div class="mb-8">
+              <h4 class="text-xl font-semibold text-slate-700 mb-6 flex items-center">
+                <i class="fas fa-upload text-indigo-500 mr-2"></i>
+                Upload Activities (Optional)
+              </h4>
+              
+              <!-- Drag & Drop Area -->
+              <div class="mb-8">
+                <div class="drag-drop-area border-2 border-dashed border-indigo-300 rounded-xl p-8 text-center bg-indigo-50 hover:bg-indigo-100 transition-colors cursor-pointer" 
+                     id="otherDropArea" onclick="document.getElementById('otherFileInput').click()">
+                  <div class="mb-4">
+                    <i class="fas fa-file-upload text-6xl text-indigo-500 mb-4"></i>
+                    <h4 class="text-xl font-semibold text-slate-700 mb-2">Drop activity logs or photos here</h4>
+                    <p class="text-slate-500 mb-4">or click to browse files</p>
+                    <div class="text-sm text-slate-400">Supports PDF, JPG, PNG files</div>
+                  </div>
+                  <input type="file" id="otherFileInput" multiple accept=".pdf,.jpg,.jpeg,.png" style="display: none;" onchange="handleOtherFiles(this.files)">
+                </div>
+              </div>
+
+              <!-- Upload Progress -->
+              <div id="otherUploadProgress" class="hidden mb-8">
+                <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-6">
+                  <div class="flex items-center justify-between mb-3">
+                    <span class="text-sm font-medium text-indigo-700">
+                      <i class="fas fa-robot mr-2"></i>
+                      AI Analyzing Activities...
+                    </span>
+                    <span class="text-sm text-indigo-600" id="otherProgressText">0%</span>
+                  </div>
+                  <div class="w-full bg-indigo-200 rounded-full h-3">
+                    <div class="bg-indigo-600 h-3 rounded-full transition-all duration-300" id="otherProgressBar" style="width: 0%"></div>
+                  </div>
+                  <p class="text-xs text-indigo-600 mt-2">Extracting activity information and estimating carbon impact...</p>
+                </div>
+              </div>
+
+              <!-- AI Extracted Data -->
+              <div id="otherExtractedData" class="hidden">
+                <h4 class="text-lg font-semibold text-slate-700 mb-4">
+                  <i class="fas fa-magic mr-2 text-indigo-500"></i>
+                  AI Extracted Data
+                </h4>
+                <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-6">
+                  <p class="text-sm text-indigo-600 mb-4">
+                    <i class="fas fa-info-circle mr-1"></i>
+                    Review and adjust the extracted values if needed
+                  </p>
+                  <div class="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <label class="block text-sm font-medium text-slate-600 mb-2">Water Usage (L/day)</label>
+                      <input type="number" class="form-input" id="extractedWater" oninput="updateFromOtherExtracted()">
+                    </div>
+                    <div>
+                      <label class="block text-sm font-medium text-slate-600 mb-2">Events Count</label>
+                      <input type="number" class="form-input" id="extractedEvents" oninput="updateFromOtherExtracted()">
+                    </div>
+                    <div>
+                      <label class="block text-sm font-medium text-slate-600 mb-2">Travel Distance (km)</label>
+                      <input type="number" class="form-input" id="extractedTravel" oninput="updateFromOtherExtracted()">
+                    </div>
+                    <div>
+                      <label class="block text-sm font-medium text-slate-600 mb-2">Custom Activity</label>
+                      <input type="text" class="form-input" id="extractedCustom" oninput="updateFromOtherExtracted()">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Real-Time Other Activities Feedback -->
+        <div class="sticky top-8" data-aos="fade-left">
+          <div class="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-3xl p-8 shadow-xl border border-indigo-200">
+            <!-- Results Card Header -->
+            <div class="text-center mb-8">
+              <h3 class="text-2xl font-bold text-slate-800 mb-2">Other Activities Impact</h3>
+              <p class="text-lg text-indigo-600 font-semibold" id="otherResultText">
+                Your footprint from other activities: <span id="otherTotalEmissions">94.5</span> kg CO₂
+              </p>
+            </div>
+            
+            <!-- Circular Progress Gauge -->
+            <div class="mb-8 flex justify-center">
+              <div class="relative w-48 h-48">
+                <svg class="w-48 h-48 transform -rotate-90" viewBox="0 0 100 100">
+                  <!-- Background circle -->
+                  <circle cx="50" cy="50" r="40" stroke="#e0e7ff" stroke-width="8" fill="none"/>
+                  <!-- Progress circle -->
+                  <circle cx="50" cy="50" r="40" stroke="url(#otherGradient)" stroke-width="8" fill="none"
+                          stroke-dasharray="251.2" stroke-dashoffset="125.6" 
+                          id="otherProgressCircle" class="transition-all duration-500 ease-out"/>
+                  <!-- Gradient definition -->
+                  <defs>
+                    <linearGradient id="otherGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" style="stop-color:#6366f1"/>
+                      <stop offset="100%" style="stop-color:#8b5cf6"/>
+                    </linearGradient>
+                  </defs>
+                </svg>
+                <!-- Center content -->
+                <div class="absolute inset-0 flex items-center justify-center">
+                  <div class="text-center">
+                    <div class="text-3xl font-black text-indigo-600" id="otherGaugeValue">94.5</div>
+                    <div class="text-sm text-slate-600 font-medium">kg CO₂</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Other Activities Category Breakdown -->
+            <div class="space-y-4 mb-8">
+              <h4 class="text-lg font-semibold text-slate-700 text-center mb-4">Breakdown by Activity</h4>
+              
+              <div class="flex items-center justify-between p-3 bg-white rounded-lg shadow-sm">
+                <div class="flex items-center">
+                  <span class="text-2xl mr-3">💧</span>
+                  <span class="font-medium text-slate-700">Water Usage</span>
+                </div>
+                <span class="font-bold text-blue-600" id="waterTotalEmissions">10.5 kg</span>
+              </div>
+              
+              <div class="flex items-center justify-between p-3 bg-white rounded-lg shadow-sm">
+                <div class="flex items-center">
+                  <span class="text-2xl mr-3">🎉</span>
+                  <span class="font-medium text-slate-700">Events</span>
+                </div>
+                <span class="font-bold text-pink-600" id="eventsTotalEmissions">24.0 kg</span>
+              </div>
+              
+              <div class="flex items-center justify-between p-3 bg-white rounded-lg shadow-sm">
+                <div class="flex items-center">
+                  <span class="text-2xl mr-3">✈️</span>
+                  <span class="font-medium text-slate-700">Travel</span>
+                </div>
+                <span class="font-bold text-purple-600" id="travelTotalEmissions">60.0 kg</span>
+              </div>
+              
+              <div class="flex items-center justify-between p-3 bg-white rounded-lg shadow-sm">
+                <div class="flex items-center">
+                  <span class="text-2xl mr-3">📝</span>
+                  <span class="font-medium text-slate-700">Custom Activity</span>
+                </div>
+                <span class="font-bold text-yellow-600" id="customTotalEmissions">0.0 kg</span>
+              </div>
+            </div>
+
+            <!-- Activity Hotspots -->
+            <div class="mb-8">
+              <h4 class="text-lg font-semibold text-slate-700 text-center mb-4">Activity Hotspots</h4>
+              <div class="bg-red-50 border border-red-200 rounded-xl p-4 mb-3">
+                <div class="flex items-center justify-between">
+                  <span class="text-sm font-medium text-red-700">🔥 Highest Impact</span>
+                  <span class="text-sm font-bold text-red-600" id="otherTopContributor">Travel (63%)</span>
+                </div>
+              </div>
+              <div class="bg-blue-50 border border-blue-200 rounded-xl p-4">
+                <div class="flex items-center justify-between">
+                  <span class="text-sm font-medium text-blue-700">🔸 Second Highest</span>
+                  <span class="text-sm font-bold text-blue-600" id="otherSecondContributor">Events (25%)</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Other Activities Pie Chart -->
+            <div class="mb-8">
+              <h4 class="text-lg font-semibold text-slate-700 text-center mb-4">Activity Distribution</h4>
+              <div class="relative w-32 h-32 mx-auto">
+                <svg class="w-32 h-32 transform -rotate-90" viewBox="0 0 42 42">
+                  <!-- Travel slice (largest) -->
+                  <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#8b5cf6" stroke-width="3"
+                          stroke-dasharray="63 37" stroke-dashoffset="0" id="otherTravelSlice"/>
+                  <!-- Events slice -->
+                  <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#ec4899" stroke-width="3"
+                          stroke-dasharray="25 75" stroke-dashoffset="-63" id="otherEventsSlice"/>
+                  <!-- Water slice -->
+                  <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#3b82f6" stroke-width="3"
+                          stroke-dasharray="11 89" stroke-dashoffset="-88" id="otherWaterSlice"/>
+                  <!-- Custom slice -->
+                  <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#f59e0b" stroke-width="3"
+                          stroke-dasharray="1 99" stroke-dashoffset="-99" id="otherCustomSlice"/>
+                </svg>
+                <div class="absolute inset-0 flex items-center justify-center">
+                  <span class="text-xs font-semibold text-slate-600">Activities</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="mb-6">
+              <div class="flex justify-between text-sm text-slate-600 mb-2">
+                <span>Monthly Target: 120.0 kg CO₂</span>
+                <span id="otherProgressPercentage">79%</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-3">
+                <div class="bg-gradient-to-r from-indigo-500 to-purple-500 h-3 rounded-full transition-all duration-500" 
+                     id="otherProgressBar" style="width: 79%"></div>
+              </div>
+            </div>
+
+            <!-- Quick Tips -->
+            <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4">
+              <h4 class="font-bold text-indigo-700 mb-2">💡 Activity Tip</h4>
+              <p class="text-sm text-indigo-600" id="otherTip">
+                Consider choosing train over flight for shorter distances to reduce travel emissions!
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Food Calculator Tab -->
     <div id="calculator" class="tab-content">
       <div class="max-w-4xl mx-auto" data-aos="fade-up">
@@ -3181,6 +3573,258 @@
     updateWasteCalculation();
   }
 
+  // Other activities tracking functions
+  function updateOtherSlider(type, value) {
+    document.getElementById(type + 'Value').textContent = value;
+    document.getElementById(type + 'Input').value = value;
+    updateOtherCalculation();
+  }
+
+  function updateOtherFromInput(type, value) {
+    if (value >= 0) {
+      document.getElementById(type + 'Slider').value = value;
+      document.getElementById(type + 'Value').textContent = value;
+      updateOtherCalculation();
+    }
+  }
+
+  function updateCustomActivity() {
+    const name = document.getElementById('customActivityName').value;
+    const value = parseFloat(document.getElementById('customActivityValue').value) || 0;
+    const include = document.getElementById('customActivityToggle').checked;
+    
+    const display = document.getElementById('customActivityDisplay');
+    const co2Display = document.getElementById('customActivityCO2');
+    
+    if (name && value > 0) {
+      display.textContent = `${name}: ${value} hrs/week`;
+      if (include) {
+        const co2 = value * 0.5; // Estimated 0.5 kg CO2 per hour for generic activity
+        co2Display.textContent = co2.toFixed(1) + ' kg CO₂';
+      } else {
+        co2Display.textContent = '0.0 kg CO₂';
+      }
+    } else {
+      display.textContent = 'No custom activity added';
+      co2Display.textContent = '0.0 kg CO₂';
+    }
+    
+    updateOtherCalculation();
+  }
+
+  function updateOtherCalculation() {
+    // Get all other activities input values
+    const water = parseFloat(document.getElementById('waterSlider').value) || 0;
+    const events = parseFloat(document.getElementById('eventsSlider').value) || 0;
+    const eventsType = document.getElementById('eventsType').value;
+    const travel = parseFloat(document.getElementById('travelSlider').value) || 0;
+    const travelMode = document.getElementById('travelMode').value;
+    
+    // Custom activity
+    const customName = document.getElementById('customActivityName').value;
+    const customValue = parseFloat(document.getElementById('customActivityValue').value) || 0;
+    const customInclude = document.getElementById('customActivityToggle').checked;
+
+    // Carbon emission factors
+    const waterEmissionFactor = 0.0007; // kg CO2 per liter (water treatment and heating)
+    
+    const eventFactors = {
+      wedding: 15.0,    // kg CO2 per event
+      party: 8.0,      // kg CO2 per event
+      festival: 20.0,  // kg CO2 per event
+      travel: 25.0     // kg CO2 per event
+    };
+
+    const travelFactors = {
+      car: 0.12,     // kg CO2 per km
+      bus: 0.05,     // kg CO2 per km
+      train: 0.04,   // kg CO2 per km
+      flight: 0.25   // kg CO2 per km
+    };
+
+    // Calculate emissions (monthly)
+    const waterEmissions = water * waterEmissionFactor * 30; // Monthly
+    const eventsEmissions = events * eventFactors[eventsType];
+    const travelEmissions = travel * travelFactors[travelMode];
+    const customEmissions = (customInclude && customName && customValue > 0) ? customValue * 0.5 * 4 : 0; // Monthly
+
+    const totalEmissions = waterEmissions + eventsEmissions + travelEmissions + customEmissions;
+
+    // Update individual CO2 displays
+    animateValue('waterCO2', waterEmissions.toFixed(1) + ' kg CO₂');
+    animateValue('eventsCO2', eventsEmissions.toFixed(1) + ' kg CO₂');
+    animateValue('travelCO2', travelEmissions.toFixed(1) + ' kg CO₂');
+
+    // Update category totals
+    animateValue('waterTotalEmissions', waterEmissions.toFixed(1) + ' kg');
+    animateValue('eventsTotalEmissions', eventsEmissions.toFixed(1) + ' kg');
+    animateValue('travelTotalEmissions', travelEmissions.toFixed(1) + ' kg');
+    animateValue('customTotalEmissions', customEmissions.toFixed(1) + ' kg');
+
+    // Update main displays
+    animateValue('otherTotalEmissions', totalEmissions.toFixed(1));
+    animateValue('otherGaugeValue', totalEmissions.toFixed(1));
+
+    // Update progress gauge
+    updateOtherProgressGauge(totalEmissions);
+    
+    // Update progress bar
+    const monthlyTarget = 120.0;
+    const percentage = Math.min((totalEmissions / monthlyTarget) * 100, 100);
+    document.getElementById('otherProgressPercentage').textContent = percentage.toFixed(0) + '%';
+    document.getElementById('otherProgressBar').style.width = percentage + '%';
+
+    // Update pie chart
+    updateOtherPieChart(waterEmissions, eventsEmissions, travelEmissions, customEmissions);
+
+    // Update hotspots
+    updateOtherHotspots(waterEmissions, eventsEmissions, travelEmissions, customEmissions);
+
+    // Update tip
+    updateOtherTip(travelMode, eventsType, water, totalEmissions);
+  }
+
+  function updateOtherProgressGauge(value) {
+    const maxValue = 150; // Max expected monthly other activities emissions
+    const percentage = Math.min(value / maxValue, 1);
+    const circumference = 251.2; // 2 * π * 40
+    const offset = circumference - (percentage * circumference);
+    
+    const circle = document.getElementById('otherProgressCircle');
+    if (circle) {
+      circle.style.strokeDashoffset = offset;
+    }
+  }
+
+  function updateOtherPieChart(water, events, travel, custom) {
+    const total = water + events + travel + custom || 1;
+    const waterPercent = (water / total) * 100;
+    const eventsPercent = (events / total) * 100;
+    const travelPercent = (travel / total) * 100;
+    const customPercent = (custom / total) * 100;
+
+    // Update pie chart slices
+    document.getElementById('otherTravelSlice').style.strokeDasharray = `${travelPercent} ${100 - travelPercent}`;
+    document.getElementById('otherEventsSlice').style.strokeDasharray = `${eventsPercent} ${100 - eventsPercent}`;
+    document.getElementById('otherEventsSlice').style.strokeDashoffset = `-${travelPercent}`;
+    document.getElementById('otherWaterSlice').style.strokeDasharray = `${waterPercent} ${100 - waterPercent}`;
+    document.getElementById('otherWaterSlice').style.strokeDashoffset = `-${travelPercent + eventsPercent}`;
+    document.getElementById('otherCustomSlice').style.strokeDasharray = `${customPercent} ${100 - customPercent}`;
+    document.getElementById('otherCustomSlice').style.strokeDashoffset = `-${travelPercent + eventsPercent + waterPercent}`;
+  }
+
+  function updateOtherHotspots(water, events, travel, custom) {
+    const categories = [
+      { name: 'Travel', value: travel },
+      { name: 'Events', value: events },
+      { name: 'Water', value: water },
+      { name: 'Custom', value: custom }
+    ];
+    
+    // Sort by emissions (highest first)
+    categories.sort((a, b) => b.value - a.value);
+    
+    const total = water + events + travel + custom || 1;
+    const topPercent = ((categories[0].value / total) * 100).toFixed(0);
+    const secondPercent = ((categories[1].value / total) * 100).toFixed(0);
+    
+    document.getElementById('otherTopContributor').textContent = `${categories[0].name} (${topPercent}%)`;
+    document.getElementById('otherSecondContributor').textContent = `${categories[1].name} (${secondPercent}%)`;
+  }
+
+  function updateOtherTip(travelMode, eventsType, water, totalEmissions) {
+    const tipElement = document.getElementById('otherTip');
+    if (!tipElement) return;
+    
+    if (travelMode === 'flight' && totalEmissions > 80) {
+      tipElement.textContent = 'Consider choosing train over flight for shorter distances to reduce travel emissions!';
+    } else if (water > 300) {
+      tipElement.textContent = 'Reducing daily water usage by 50L could save 1kg CO₂ per month!';
+    } else if (eventsType === 'festival' && totalEmissions > 60) {
+      tipElement.textContent = 'Choose local events and festivals to reduce travel-related emissions!';
+    } else if (totalEmissions < 50) {
+      tipElement.textContent = 'Great job! Your other activities have a relatively low carbon footprint.';
+    } else if (travelMode === 'car') {
+      tipElement.textContent = 'Consider carpooling or public transport for leisure travel to reduce emissions.';
+    } else {
+      tipElement.textContent = 'Look for opportunities to reduce water usage and choose sustainable travel options.';
+    }
+  }
+
+  function handleOtherFiles(files) {
+    const progressDiv = document.getElementById('otherUploadProgress');
+    const extractedDiv = document.getElementById('otherExtractedData');
+    const progressBar = document.getElementById('otherProgressBar');
+    const progressText = document.getElementById('otherProgressText');
+    
+    if (files.length === 0) return;
+    
+    // Show progress
+    progressDiv.classList.remove('hidden');
+    
+    // Simulate AI processing
+    let progress = 0;
+    const interval = setInterval(() => {
+      progress += Math.random() * 8;
+      if (progress >= 100) {
+        progress = 100;
+        clearInterval(interval);
+        
+        // Show extracted data after processing
+        setTimeout(() => {
+          progressDiv.classList.add('hidden');
+          extractedDiv.classList.remove('hidden');
+          
+          // Simulate extracted values
+          document.getElementById('extractedWater').value = 180;
+          document.getElementById('extractedEvents').value = 3;
+          document.getElementById('extractedTravel').value = 750;
+          document.getElementById('extractedCustom').value = 'Swimming: 5 hrs/week';
+          
+          // Update calculations with extracted data
+          updateFromOtherExtracted();
+        }, 500);
+      }
+      
+      progressBar.style.width = progress + '%';
+      progressText.textContent = Math.round(progress) + '%';
+    }, 400);
+  }
+
+  function updateFromOtherExtracted() {
+    const water = parseFloat(document.getElementById('extractedWater').value) || 0;
+    const events = parseFloat(document.getElementById('extractedEvents').value) || 0;
+    const travel = parseFloat(document.getElementById('extractedTravel').value) || 0;
+    const custom = document.getElementById('extractedCustom').value;
+    
+    // Update manual inputs
+    document.getElementById('waterSlider').value = water;
+    document.getElementById('waterInput').value = water;
+    document.getElementById('waterValue').textContent = water;
+    
+    document.getElementById('eventsSlider').value = events;
+    document.getElementById('eventsInput').value = events;
+    document.getElementById('eventsValue').textContent = events;
+    
+    document.getElementById('travelSlider').value = travel;
+    document.getElementById('travelInput').value = travel;
+    document.getElementById('travelValue').textContent = travel;
+    
+    // Parse custom activity
+    if (custom && custom.includes(':')) {
+      const parts = custom.split(':');
+      const activityName = parts[0].trim();
+      const activityValue = parts[1].trim().split(' ')[0];
+      
+      document.getElementById('customActivityName').value = activityName;
+      document.getElementById('customActivityValue').value = activityValue;
+      document.getElementById('customActivityToggle').checked = true;
+    }
+    
+    updateOtherCalculation();
+    updateCustomActivity();
+  }
+
   // Update slider values
   function updateValue(type, value) {
     document.getElementById(type + 'Value').textContent = value + ' km';
@@ -3326,6 +3970,7 @@
   updateEnergyCalculation();
   updateShoppingCalculation();
   updateWasteCalculation();
+  updateOtherCalculation();
 </script>
 
 {% endblock %}
