@@ -1,1004 +1,1142 @@
 {% extends "layout.html" %}
 
-{% block title %}Home Page{% endblock %}
+{% block title %}Track Your Carbon Footprint | Carbon Tracker{% endblock %}
 
 {% block content %}
-<div class="container py-4">
-    <div class="calculator-section">
-        <h1 class="mb-4 text-center">🌱 Carbon Footprint Calculator</h1>
-        <p class="text-center mb-5 text-secondary">Calculate your environmental impact and take steps towards a greener future</p>
-
-        <!-- Input Form -->
-        <div class="form-container">
-            <form method="post" class="carbon-form" id="carbonForm">
-                {% csrf_token %}
-                
-                <!-- Transportation Section -->
-                <div class="form-section">
-                    <h3 class="section-title">🚗 Transportation</h3>
-                    
-                    <div class="form-group">
-                        <label for="{{ form.car_travel_km.id_for_label }}" class="form-label">
-                            Car Travel Distance (km/month)
-                        </label>
-                        {{ form.car_travel_km }}
-                        <small class="form-help">Enter the distance you travel by car per month</small>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="{{ form.fuel_type.id_for_label }}" class="form-label">
-                            ⛽ Fuel Type
-                        </label>
-                        {{ form.fuel_type }}
-                        <small class="form-help">Select the type of fuel your car uses</small>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="{{ form.flights_hours.id_for_label }}" class="form-label">
-                            ✈️ Flight Hours (monthly)
-                        </label>
-                        {{ form.flights_hours }}
-                        <small class="form-help">Enter total flight hours per month</small>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="{{ form.public_transport_km.id_for_label }}" class="form-label">
-                            🚌 Public Transport Distance (km/month)
-                        </label>
-                        {{ form.public_transport_km }}
-                        <small class="form-help">Enter distance traveled by bus, train, or metro per month</small>
-                    </div>
-                </div>
-
-                <!-- Food Section -->
-                <div class="form-section">
-                    <h3 class="section-title">🍽️ Food Consumption</h3>
-                    
-                    <div class="form-group">
-                        <label for="{{ form.meals_per_day.id_for_label }}" class="form-label">
-                            🍴 Meals per Day
-                        </label>
-                        {{ form.meals_per_day }}
-                        <small class="form-help">Number of meals you eat per day</small>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="{{ form.meal_type.id_for_label }}" class="form-label">
-                            🥩 Meal Type
-                        </label>
-                        {{ form.meal_type }}
-                        <small class="form-help">Select your typical meal composition</small>
-                    </div>
-                </div>
-
-                <!-- Energy Section -->
-                <div class="form-section">
-                    <h3 class="section-title">⚡ Energy Usage</h3>
-                    
-                    <div class="form-group">
-                        <label for="{{ form.electricity_kwh.id_for_label }}" class="form-label">
-                            🔌 Electricity Consumption (kWh/month)
-                        </label>
-                        {{ form.electricity_kwh }}
-                        <small class="form-help">Your monthly electricity bill consumption</small>
-                    </div>
-                </div>
-
-                <!-- Waste Section -->
-                <div class="form-section">
-                    <h3 class="section-title">🗑️ Waste Management</h3>
-                    
-                    <div class="form-group">
-                        <label for="{{ form.waste_kg.id_for_label }}" class="form-label">
-                            🗑️ Waste Generation (kg/month)
-                        </label>
-                        {{ form.waste_kg }}
-                        <small class="form-help">Amount of waste you generate per month</small>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="{{ form.waste_type.id_for_label }}" class="form-label">
-                            ♻️ Waste Management Style
-                        </label>
-                        {{ form.waste_type }}
-                        <small class="form-help">How well do you recycle and manage waste?</small>
-                    </div>
-                </div>
-
-                <div class="form-actions">
-                    <button type="submit" class="btn btn-primary btn-calculate" id="btnCalculate">
-                        <span class="btn-icon">📊</span>
-                        Calculate Carbon Footprint
-                    </button>
-                    <button type="button" class="btn btn-secondary btn-reset" onclick="resetForm()">
-                        <span class="btn-icon">🔄</span>
-                        Reset Form
-                    </button>
-                </div>
-            </form>
-        </div>
-
-        <!-- Enhanced Analysis Card -->
-        <div class="analysis-container" id="resultContainer" {% if not result %}style="display: none;"{% endif %}>
-            <div class="analysis-card">
-                <!-- Header Section -->
-                <div class="analysis-header">
-                    <div class="header-content">
-                        <h2 class="analysis-title">🌍 Carbon Footprint Analysis</h2>
-                        <p class="analysis-subtitle">Your environmental impact assessment</p>
-                    </div>
-                    <div class="header-icon">
-                        <div class="icon-circle">
-                            <span class="icon-emoji">📊</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Main Result Section -->
-                <div class="main-result">
-                    <div class="result-display">
-                        <div class="emission-circle">
-                            <div class="circle-content">
-                                <span class="emission-number" id="resultValue">{{ result }}</span>
-                                <span class="emission-unit">kg CO₂</span>
-                                <span class="emission-period">per month</span>
-                            </div>
-                        </div>
-                        <div class="result-context">
-                            <div class="impact-level">
-                                {% if result < 100 %}
-                                    <span class="level-badge excellent">🌟 Excellent</span>
-                                    <p class="level-description">Your carbon footprint is quite low!</p>
-                                {% elif result < 150 %}
-                                    <span class="level-badge good">👍 Good</span>
-                                    <p class="level-description">You're doing well, but there's room for improvement.</p>
-                                {% elif result < 200 %}
-                                    <span class="level-badge moderate">⚠️ Moderate</span>
-                                    <p class="level-description">Above average impact. Consider some changes.</p>
-                                {% else %}
-                                    <span class="level-badge high">🚨 High</span>
-                                    <p class="level-description">Significant impact. Immediate action recommended.</p>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Emission Breakdown -->
-                <div class="breakdown-section">
-                    <h3 class="section-heading">📊 Emission Breakdown</h3>
-                    <div class="breakdown-grid">
-                        <div class="breakdown-card transportation">
-                            <div class="card-icon">🚗</div>
-                            <div class="card-content">
-                                <h4>Transportation</h4>
-                                <div class="emission-value"><span id="transportationValue">0</span> kg</div>
-                                <div class="emission-percentage"><span id="transportationPct">0</span>%</div>
-                            </div>
-                        </div>
-                        <div class="breakdown-card food">
-                            <div class="card-icon">🍽️</div>
-                            <div class="card-content">
-                                <h4>Food</h4>
-                                <div class="emission-value"><span id="foodValue">0</span> kg</div>
-                                <div class="emission-percentage"><span id="foodPct">0</span>%</div>
-                            </div>
-                        </div>
-                        <div class="breakdown-card energy">
-                            <div class="card-icon">⚡</div>
-                            <div class="card-content">
-                                <h4>Electricity</h4>
-                                <div class="emission-value"><span id="electricityValue">0</span> kg</div>
-                                <div class="emission-percentage"><span id="electricityPct">0</span>%</div>
-                            </div>
-                        </div>
-                        <div class="breakdown-card waste">
-                            <div class="card-icon">🗑️</div>
-                            <div class="card-content">
-                                <h4>Waste</h4>
-                                <div class="emission-value"><span id="wasteValue">0</span> kg</div>
-                                <div class="emission-percentage"><span id="wastePct">0</span>%</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Impact Summary -->
-                <div class="impact-summary">
-                    <div class="summary-grid">
-                        <div class="summary-item">
-                            <div class="summary-icon">📅</div>
-                            <div class="summary-content">
-                                <span class="summary-label">Monthly Impact</span>
-                                <span class="summary-value" id="monthlyImpact">{{ result }} kg CO₂</span>
-                            </div>
-                        </div>
-                        <div class="summary-item">
-                            <div class="summary-icon">📆</div>
-                            <div class="summary-content">
-                                <span class="summary-label">Annual Impact</span>
-                                <span class="summary-value" id="annualImpact">{% widthratio result 1 12 %} kg CO₂</span>
-                            </div>
-                        </div>
-                        <div class="summary-item">
-                            <div class="summary-icon">🌳</div>
-                            <div class="summary-content">
-                                <span class="summary-label">Trees to Offset</span>
-                                <span class="summary-value" id="treesOffset">{% widthratio result 22 1 %} trees</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Tips Message (Client-Fetched) -->
-                <div class="tips-section" id="tipsSection" style="display: none;">
-                    <h3 class="section-heading">💡 Personalized Tip</h3>
-                    <div class="assessment-card">
-                        <div class="assessment-content" id="tipsMessage"></div>
-                    </div>
-                </div>
-
-                {% if messages %}
-                <div class="tips-section">
-                    <h3 class="section-heading">⚠️ Error</h3>
-                    <div class="assessment-card" style="background: rgba(239, 68, 68, 0.1); border-color: #ef4444;">
-                        {% for message in messages %}
-                            <div class="assessment-content" style="color: #ef4444;">{{ message }}</div>
-                        {% endfor %}
-                    </div>
-                </div>
-                {% endif %}
-
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-function resetForm() {
-    // Reset all form fields to their default values
-    const form = document.getElementById('carbonForm');
-    form.reset();
-    
-    // Set default values explicitly for better control
-    const inputs = form.querySelectorAll('input[type="number"]');
-    inputs.forEach(input => {
-        input.value = '';
-    });
-    
-    // Reset select to first option
-    const selects = form.querySelectorAll('select');
-    selects.forEach(select => {
-        select.selectedIndex = 0;
-    });
-    
-    // Hide the result container
-    const resultContainer = document.getElementById('resultContainer');
-    if (resultContainer) {
-        resultContainer.style.display = 'none';
-    }
-    
-    // Add a visual feedback
-    const resetBtn = document.querySelector('.btn-reset');
-    const originalText = resetBtn.innerHTML;
-    resetBtn.innerHTML = '<span class="btn-icon">✅</span>Form Reset!';
-    resetBtn.style.background = 'linear-gradient(135deg, #22c55e, #16a34a)';
-    
-    // Reset button appearance after 2 seconds
-    setTimeout(() => {
-        resetBtn.innerHTML = originalText;
-        resetBtn.style.background = 'linear-gradient(135deg, #6b7280, #4b5563)';
-    }, 2000);
-}
-
-// Add form change listener to show result container when form is submitted
-document.addEventListener('DOMContentLoaded', function() {
-    const form = document.getElementById('carbonForm');
-    const resultContainer = document.getElementById('resultContainer');
-    const btnCalculate = document.getElementById('btnCalculate');
-
-    const getCookie = (name) => {
-        const value = `; ${document.cookie}`;
-        const parts = value.split(`; ${name}=`);
-        if (parts.length === 2) return parts.pop().split(';').shift();
-    };
-    const csrftoken = getCookie('csrftoken');
-
-    form.addEventListener('submit', function(e) {
-        e.preventDefault();
-
-        // Collect form values into payload
-        const formData = new FormData(form);
-        const payload = Object.fromEntries(formData.entries());
-
-        btnCalculate.disabled = true;
-        const original = btnCalculate.innerHTML;
-        btnCalculate.innerHTML = '<span class="btn-icon">⏳</span>Calculating...';
-
-        fetch('{% url "ai_tips_api" %}', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': csrftoken || ''
-            },
-            body: JSON.stringify(payload)
-        })
-        .then(r => r.ok ? r.json() : r.json().then(err => Promise.reject(err)))
-        .then(data => {
-            // Update result UI
-            const result = data.result ?? 0;
-            const eb = data.emission_breakdown || {};
-            document.getElementById('resultValue').textContent = result;
-            document.getElementById('monthlyImpact').textContent = `${result} kg CO₂`;
-            document.getElementById('annualImpact').textContent = `${Math.round(result * 12)} kg CO₂`;
-            document.getElementById('treesOffset').textContent = `${Math.round(result / 22)} trees`;
-
-            // Ensure breakdown section is present; if it's in template, we can just update numbers if needed.
-            const t = eb.transportation ?? 0;
-            const f = eb.food ?? 0;
-            const e = eb.electricity ?? 0;
-            const w = eb.waste ?? 0;
-            const total = (t + f + e + w) || 1;
-            const pct = (x) => Math.round((x / total) * 100);
-            const setText = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
-            setText('transportationValue', t);
-            setText('foodValue', f);
-            setText('electricityValue', e);
-            setText('wasteValue', w);
-            setText('transportationPct', pct(t));
-            setText('foodPct', pct(f));
-            setText('electricityPct', pct(e));
-            setText('wastePct', pct(w));
-
-            // Show result container with animation
-            if (resultContainer) {
-                resultContainer.style.display = 'block';
-                resultContainer.style.opacity = '0';
-                resultContainer.style.transform = 'translateY(20px)';
-                setTimeout(() => {
-                    resultContainer.style.transition = 'all 0.5s ease';
-                    resultContainer.style.opacity = '1';
-                    resultContainer.style.transform = 'translateY(0)';
-                }, 100);
-            }
-
-            // Show AI tip
-            if (data.message) {
-                const tipsSection = document.getElementById('tipsSection');
-                const tipsMessage = document.getElementById('tipsMessage');
-                tipsMessage.textContent = data.message;
-                tipsSection.style.display = 'block';
-            }
-        })
-        .catch(err => {
-            console.warn('AI Tips API error', err);
-            const tipsSection = document.getElementById('tipsSection');
-            const tipsMessage = document.getElementById('tipsMessage');
-            tipsMessage.textContent = 'Could not get AI tip right now. Please try again later.';
-            tipsSection.style.display = 'block';
-        })
-        .finally(() => {
-            btnCalculate.disabled = false;
-            btnCalculate.innerHTML = original;
-        });
-    });
-});
-</script>
+<!-- CDN Scripts -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
 <style>
-.calculator-section {
-    max-width: 800px;
-    margin: 0 auto;
-}
-
-.form-container {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
-    box-shadow: var(--shadow);
-}
-
-.carbon-form {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-}
-
-.form-section {
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 1rem;
-    background: var(--bg-secondary);
-}
-
-.section-title {
-    color: var(--text-primary);
-    font-size: 1.1rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
-    margin-bottom: 1rem;
-}
-
-.form-label {
-    font-weight: 600;
-    color: var(--text-primary);
-    font-size: 0.95rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.form-help {
-    color: var(--text-secondary);
-    font-size: 0.8rem;
-    font-style: italic;
-}
-
-.carbon-form input,
-.carbon-form select {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 0.6rem 0.8rem;
-    color: var(--text-primary);
-    font-size: 0.95rem;
-    transition: all 0.3s ease;
-}
-
-.carbon-form input:focus,
-.carbon-form select:focus {
-    outline: none;
-    border-color: var(--accent-green);
-    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
-}
-
-.form-actions {
-    display: flex;
-    gap: 0.8rem;
-    justify-content: center;
-    margin-top: 0.8rem;
-}
-
-.btn-calculate {
-    background: linear-gradient(135deg, var(--accent-green), var(--accent-green-hover));
-    flex: 1;
-    max-width: 280px;
-    padding: 0.7rem 1.2rem;
-    font-size: 0.95rem;
-}
-
-.btn-reset {
-    background: linear-gradient(135deg, #6b7280, #4b5563);
-    flex: 1;
-    max-width: 180px;
-    padding: 0.7rem 1.2rem;
-    font-size: 0.95rem;
-    transition: all 0.3s ease;
-}
-
-.btn-reset:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(107, 114, 128, 0.3);
-}
-
-.btn-icon {
-    margin-right: 0.4rem;
-}
-
-/* Enhanced Analysis Card Styles */
-.analysis-container {
-    margin-top: 2rem;
-    transition: all 0.5s ease;
-}
-
-.analysis-card {
-    background: linear-gradient(135deg, var(--bg-card), rgba(34, 197, 94, 0.02));
-    border: 1px solid var(--accent-green);
-    border-radius: 24px;
-    padding: 2rem;
-    box-shadow: 0 20px 40px rgba(34, 197, 94, 0.1);
-    position: relative;
-    overflow: hidden;
-}
-
-.analysis-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, var(--accent-green), #10b981, #059669);
-}
-
-/* Header Section */
-.analysis-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid var(--border);
-}
-
-.header-content {
-    flex: 1;
-}
-
-.analysis-title {
-    color: var(--text-primary);
-    font-size: 2rem;
-    font-weight: 700;
-    margin: 0;
-    background: linear-gradient(135deg, var(--text-primary), var(--accent-green));
+  :root {
+    --primary-green: #27ae60;
+    --primary-blue: #3498db;
+    --dark-green: #229954;
+    --light-green: #58d68d;
+  }
+  
+  .gradient-text {
+    background: linear-gradient(135deg, var(--primary-green), var(--primary-blue));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-}
-
-.analysis-subtitle {
-    color: var(--text-secondary);
+  }
+  
+  .tab-button {
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    cursor: pointer;
+  }
+  
+  .tab-button.active {
+    background: linear-gradient(135deg, var(--primary-green), var(--dark-green));
+    color: white;
+    box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
+  }
+  
+  .tab-button:not(.active) {
+    background: white;
+    color: #64748b;
+    border-color: #e2e8f0;
+  }
+  
+  .tab-button:not(.active):hover {
+    border-color: var(--primary-green);
+    color: var(--primary-green);
+  }
+  
+  .form-input, .form-select {
+    width: 100%;
+    padding: 1rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
     font-size: 1rem;
-    margin: 0.5rem 0 0 0;
-}
-
-.header-icon {
-    margin-left: 1rem;
-}
-
-.icon-circle {
-    width: 80px;
-    height: 80px;
-    background: linear-gradient(135deg, var(--accent-green), var(--accent-green-hover));
+    transition: all 0.3s ease;
+    background: white;
+    color: #1e293b;
+    font-weight: 500;
+  }
+  
+  .form-input:focus, .form-select:focus {
+    outline: none;
+    border-color: var(--primary-green);
+    box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.1);
+    color: #1e293b;
+  }
+  
+  .form-input::placeholder {
+    color: #94a3b8;
+    font-weight: 400;
+  }
+  
+  .form-select option {
+    color: #1e293b;
+    background: white;
+    padding: 0.5rem;
+    font-weight: 500;
+  }
+  
+  .form-input:disabled {
+    background: #f1f5f9;
+    color: #94a3b8;
+    cursor: not-allowed;
+  }
+  
+  .slider {
+    width: 100%;
+    height: 8px;
+    border-radius: 4px;
+    background: #e2e8f0;
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+  
+  .slider::-webkit-slider-thumb {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 24px;
+    height: 24px;
     border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 8px 25px rgba(34, 197, 94, 0.3);
-}
-
-.icon-emoji {
-    font-size: 2rem;
-}
-
-/* Main Result Section */
-.main-result {
-    margin-bottom: 2.5rem;
-}
-
-.result-display {
-    display: flex;
-    align-items: center;
-    gap: 2rem;
-    justify-content: center;
-}
-
-.emission-circle {
+    background: var(--primary-green);
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(39, 174, 96, 0.3);
+    border: 2px solid white;
+  }
+  
+  .slider::-moz-range-thumb {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--primary-green);
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(39, 174, 96, 0.3);
+    border: 2px solid white;
+  }
+  
+  .progress-gauge {
     width: 200px;
     height: 200px;
-    background: linear-gradient(135deg, var(--accent-green), var(--accent-green-hover));
     border-radius: 50%;
+    background: conic-gradient(var(--primary-green) 0deg 252deg, #e5e7eb 252deg 360deg);
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
-    box-shadow: 0 15px 35px rgba(34, 197, 94, 0.3);
-    animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-    0% { box-shadow: 0 15px 35px rgba(34, 197, 94, 0.3); }
-    50% { box-shadow: 0 20px 45px rgba(34, 197, 94, 0.5); }
-    100% { box-shadow: 0 15px 35px rgba(34, 197, 94, 0.3); }
-}
-
-.circle-content {
+    margin: 0 auto;
+  }
+  
+  .progress-gauge::before {
+    content: '';
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    background: white;
+    position: absolute;
+  }
+  
+  .drag-drop-area {
+    border: 3px dashed #cbd5e1;
+    border-radius: 16px;
+    padding: 3rem;
     text-align: center;
+    transition: all 0.3s ease;
+    background: #f8fafc;
+    cursor: pointer;
+  }
+  
+  .drag-drop-area.dragover {
+    border-color: var(--primary-green);
+    background: rgba(39, 174, 96, 0.05);
+  }
+  
+  .btn-primary {
+    background: linear-gradient(135deg, var(--primary-green), var(--dark-green));
     color: white;
-}
-
-.emission-number {
-    font-size: 3rem;
-    font-weight: 800;
-    display: block;
-    line-height: 1;
-}
-
-.emission-unit {
-    font-size: 1.2rem;
+    padding: 1rem 2rem;
+    border-radius: 50px;
     font-weight: 600;
-    display: block;
-    margin-top: 0.2rem;
-}
-
-.emission-period {
-    font-size: 0.9rem;
-    opacity: 0.9;
-    display: block;
-    margin-top: 0.1rem;
-}
-
-.result-context {
-    flex: 1;
-    max-width: 300px;
-}
-
-.impact-level {
-    text-align: center;
-}
-
-.level-badge {
-    display: inline-block;
-    padding: 0.5rem 1rem;
-    border-radius: 25px;
-    font-weight: 600;
-    font-size: 1rem;
-    margin-bottom: 0.5rem;
-}
-
-.level-badge.excellent {
-    background: rgba(34, 197, 94, 0.1);
-    color: var(--accent-green);
-    border: 1px solid var(--accent-green);
-}
-
-.level-badge.good {
-    background: rgba(59, 130, 246, 0.1);
-    color: #3b82f6;
-    border: 1px solid #3b82f6;
-}
-
-.level-badge.moderate {
-    background: rgba(251, 191, 36, 0.1);
-    color: #fbbf24;
-    border: 1px solid #fbbf24;
-}
-
-.level-badge.high {
-    background: rgba(239, 68, 68, 0.1);
-    color: #ef4444;
-    border: 1px solid #ef4444;
-}
-
-.level-description {
-    color: var(--text-secondary);
-    font-size: 0.9rem;
-    margin: 0;
-}
-
-/* Breakdown Section */
-.breakdown-section {
-    margin-bottom: 2.5rem;
-}
-
-.section-heading {
-    color: var(--text-primary);
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin-bottom: 1.5rem;
-    text-align: center;
-}
-
-.breakdown-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
-}
-
-.breakdown-card {
-    background: var(--bg-secondary);
-    border: 1px solid var(--border);
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(39, 174, 96, 0.3);
+  }
+  
+  .category-card {
+    background: white;
     border-radius: 16px;
     padding: 1.5rem;
     text-align: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    border: 2px solid transparent;
     transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-}
-
-.breakdown-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-}
-
-.breakdown-card.transportation {
-    border-left: 4px solid #3b82f6;
-}
-
-.breakdown-card.food {
-    border-left: 4px solid #f59e0b;
-}
-
-.breakdown-card.energy {
-    border-left: 4px solid #ef4444;
-}
-
-.breakdown-card.waste {
-    border-left: 4px solid #8b5cf6;
-}
-
-.card-icon {
-    font-size: 2rem;
-    margin-bottom: 0.5rem;
-}
-
-.card-content h4 {
-    color: var(--text-primary);
-    font-size: 1rem;
-    font-weight: 600;
-    margin: 0 0 0.5rem 0;
-}
-
-.emission-value {
-    color: var(--accent-green);
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin-bottom: 0.2rem;
-}
-
-.emission-percentage {
-    color: var(--text-secondary);
-    font-size: 0.8rem;
-    font-weight: 500;
-}
-
-/* Impact Summary */
-.impact-summary {
-    margin-bottom: 2.5rem;
-}
-
-.summary-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 1rem;
-}
-
-.summary-item {
-    background: var(--bg-secondary);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 0.8rem;
-}
-
-.summary-icon {
-    font-size: 1.5rem;
-    width: 40px;
-    height: 40px;
-    background: var(--accent-green);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.summary-content {
-    flex: 1;
-}
-
-.summary-label {
+  }
+  
+  .category-card:hover {
+    border-color: var(--primary-green);
+    transform: translateY(-2px);
+  }
+  
+  .tab-content {
+    display: none;
+  }
+  
+  .tab-content.active {
     display: block;
-    color: var(--text-secondary);
-    font-size: 0.8rem;
-    margin-bottom: 0.2rem;
-}
-
-.summary-value {
-    display: block;
-    color: var(--text-primary);
-    font-size: 1rem;
-    font-weight: 600;
-}
-
-/* Tips Section */
-.tips-section {
-    margin-bottom: 2.5rem;
-}
-
-.assessment-card {
-    background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(16, 185, 129, 0.05));
-    border: 1px solid var(--accent-green);
-    border-radius: 12px;
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
-    text-align: center;
-}
-
-.assessment-content {
-    color: var(--accent-green);
-    font-size: 1.1rem;
-    font-weight: 600;
-    font-style: italic;
-}
-
-.tips-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-}
-
-.tip-card {
-    background: var(--bg-secondary);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 1.2rem;
-    transition: all 0.3s ease;
-}
-
-.tip-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-}
-
-.tip-header {
-    display: flex;
-    align-items: center;
-    gap: 0.8rem;
-    margin-bottom: 0.8rem;
-}
-
-.tip-icon {
-    font-size: 1.5rem;
-    width: 35px;
-    height: 35px;
-    background: var(--accent-green);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.tip-category {
-    background: var(--accent-green);
-    color: white;
-    padding: 0.2rem 0.6rem;
-    border-radius: 12px;
-    font-size: 0.7rem;
-    font-weight: 600;
-}
-
-.tip-content {
-    margin-left: 0.5rem;
-}
-
-.tip-text {
-    color: var(--text-primary);
-    font-size: 0.9rem;
-    line-height: 1.4;
-    margin: 0 0 0.8rem 0;
-}
-
-.tip-savings {
-    display: flex;
-    align-items: center;
-    gap: 0.3rem;
-}
-
-.savings-icon {
-    font-size: 0.9rem;
-}
-
-.savings-text {
-    color: var(--accent-green);
-    font-size: 0.8rem;
-    font-weight: 600;
-}
-
-.motivation-card {
-    background: rgba(34, 197, 94, 0.05);
-    border: 1px solid var(--accent-green);
-    border-radius: 12px;
-    padding: 1.2rem;
-    text-align: center;
-}
-
-.motivation-content {
-    color: var(--text-primary);
-    font-style: italic;
-    font-size: 0.95rem;
-}
-
-/* General Tips */
-.general-tips {
-    margin-bottom: 1rem;
-}
-
-.tips-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 0.8rem;
-}
-
-.tip-item {
-    display: flex;
-    align-items: center;
-    gap: 0.8rem;
-    padding: 0.8rem;
-    background: var(--bg-secondary);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    transition: all 0.3s ease;
-}
-
-.tip-item:hover {
-    background: rgba(34, 197, 94, 0.05);
-    border-color: var(--accent-green);
-}
-
-.tip-bullet {
-    color: var(--accent-green);
-    font-weight: bold;
-    font-size: 1rem;
-}
-
-.tip-text {
-    color: var(--text-secondary);
-    font-size: 0.9rem;
-    flex: 1;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .calculator-section {
-        max-width: 95%;
-    }
-    
-    .form-container {
-        padding: 1.2rem;
-    }
-    
-    .form-actions {
-        flex-direction: column;
-    }
-    
-    .btn-calculate,
-    .btn-reset {
-        max-width: none;
-    }
-    
-    .analysis-header {
-        flex-direction: column;
-        text-align: center;
-        gap: 1rem;
-    }
-    
-    .result-display {
-        flex-direction: column;
-        gap: 1.5rem;
-    }
-    
-    .emission-circle {
-        width: 150px;
-        height: 150px;
-    }
-    
-    .emission-number {
-        font-size: 2.5rem;
-    }
-    
-    .breakdown-grid,
-    .summary-grid,
-    .tips-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .tips-list {
-        grid-template-columns: 1fr;
-    }
-}
+  }
+  
+  /* Enhanced visibility for form elements */
+  input[type="number"], input[type="text"], select {
+    color: #1e293b !important;
+    background-color: white !important;
+    font-size: 16px !important;
+    font-weight: 500 !important;
+  }
+  
+  input[type="number"]:focus, input[type="text"]:focus, select:focus {
+    color: #1e293b !important;
+    background-color: white !important;
+  }
+  
+  select option {
+    color: #1e293b !important;
+    background-color: white !important;
+    font-size: 16px !important;
+    padding: 8px !important;
+  }
+  
+  /* Checkbox styling */
+  input[type="checkbox"] {
+    accent-color: var(--primary-green);
+    transform: scale(1.2);
+  }
+  
+  /* Number input styling */
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
 </style>
-{% endblock %}  
+
+<!-- Header Section -->
+<section class="py-16 px-6 bg-gradient-to-br from-green-50 to-blue-50">
+  <div class="max-w-5xl mx-auto text-center">
+    <h1 class="text-5xl md:text-6xl font-black mb-6" data-aos="fade-up">
+      <span class="gradient-text">Track Your Carbon Footprint in Detail</span>
+    </h1>
+    <div class="flex items-center justify-center gap-3 mb-8" data-aos="fade-up" data-aos-delay="100">
+      <p class="text-xl text-slate-600 max-w-3xl leading-relaxed">
+        Log your daily lifestyle choices — our AI translates them into CO₂ equivalents.
+      </p>
+      <div class="relative">
+        <button class="info-icon w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors" onclick="toggleTooltip()">
+          <i class="fas fa-info text-sm"></i>
+        </button>
+        <div id="tooltip" class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-80 bg-slate-800 text-white text-sm rounded-lg p-4 shadow-xl opacity-0 invisible transition-all duration-300">
+          <div class="text-center">
+            <h4 class="font-bold mb-2">What is a Carbon Footprint?</h4>
+            <p>Your carbon footprint is the total amount of greenhouse gases (CO₂) produced by your daily activities, measured in kilograms or tons per year.</p>
+          </div>
+          <div class="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-slate-800"></div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Quick Stats -->
+    <div class="grid md:grid-cols-3 gap-6 max-w-2xl mx-auto" data-aos="fade-up" data-aos-delay="200">
+      <div class="bg-white rounded-xl p-4 shadow-sm">
+        <div class="text-2xl font-bold text-green-600" id="todayTotal">0.0</div>
+        <div class="text-sm text-slate-500">kg CO₂ Today</div>
+      </div>
+      <div class="bg-white rounded-xl p-4 shadow-sm">
+        <div class="text-2xl font-bold text-blue-600" id="weeklyAvg">0.0</div>
+        <div class="text-sm text-slate-500">Weekly Average</div>
+      </div>
+      <div class="bg-white rounded-xl p-4 shadow-sm">
+        <div class="text-2xl font-bold text-purple-600" id="carbonBudget">15.0</div>
+        <div class="text-sm text-slate-500">Daily Budget</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Comprehensive Tracking Categories -->
+<section class="py-16 px-6 bg-white">
+  <div class="max-w-7xl mx-auto">
+    <!-- Category Navigation -->
+    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3 mb-12" data-aos="fade-up">
+      <button class="tab-button active text-sm" onclick="switchTab('transportation')">
+        <i class="fas fa-car mr-1"></i>
+        Transport
+      </button>
+      <button class="tab-button text-sm" onclick="switchTab('food')">
+        <i class="fas fa-utensils mr-1"></i>
+        Food & Diet
+      </button>
+      <button class="tab-button text-sm" onclick="switchTab('energy')">
+        <i class="fas fa-plug mr-1"></i>
+        Energy
+      </button>
+      <button class="tab-button text-sm" onclick="switchTab('shopping')">
+        <i class="fas fa-shopping-cart mr-1"></i>
+        Shopping
+      </button>
+      <button class="tab-button text-sm" onclick="switchTab('waste')">
+        <i class="fas fa-recycle mr-1"></i>
+        Waste
+      </button>
+      <button class="tab-button text-sm" onclick="switchTab('other')">
+        <i class="fas fa-globe mr-1"></i>
+        Other
+      </button>
+      <button class="tab-button text-sm" onclick="switchTab('upload')">
+        <i class="fas fa-upload mr-1"></i>
+        Upload
+      </button>
+    </div>
+
+    <!-- Transportation Tab -->
+    <div id="transportation" class="tab-content active">
+      <div class="grid lg:grid-cols-2 gap-12">
+        <!-- Input Section -->
+        <div class="space-y-8" data-aos="fade-right">
+          <div class="bg-white rounded-3xl p-8 shadow-lg border border-blue-100">
+            <!-- Section Header -->
+            <div class="mb-8">
+              <h3 class="text-3xl font-bold text-slate-800 mb-3">
+                <i class="fas fa-car text-blue-500 mr-3"></i>
+                Transportation
+              </h3>
+              <p class="text-lg text-slate-600">Log your daily and monthly travel to measure emissions.</p>
+            </div>
+            
+            <!-- Daily Commute Distance -->
+            <div class="mb-10">
+              <h4 class="text-xl font-semibold text-slate-700 mb-6 flex items-center">
+                <i class="fas fa-route text-green-500 mr-2"></i>
+                Daily Commute Distance
+              </h4>
+              <div class="bg-gradient-to-r from-blue-50 to-green-50 rounded-xl p-6">
+                <div class="mb-4">
+                  <label class="block text-sm font-medium text-slate-600 mb-3">Distance (0-200 km)</label>
+                  <input type="range" min="0" max="200" value="25" class="slider w-full mb-3" id="dailyCommuteSlider" 
+                         oninput="updateDailyCommute(this.value)" onchange="updateTransportCalculation()">
+                  <div class="flex justify-between items-center">
+                    <span class="text-sm text-slate-500">0 km</span>
+                    <div class="bg-white rounded-lg px-4 py-2 shadow-sm">
+                      <span class="text-2xl font-bold text-blue-600" id="dailyCommuteValue">25</span>
+                      <span class="text-sm text-slate-500 ml-1">km/day</span>
+                    </div>
+                    <span class="text-sm text-slate-500">200 km</span>
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-slate-600 mb-2">Manual Input</label>
+                  <input type="number" min="0" max="200" value="25" class="form-input w-32" id="dailyCommuteInput" 
+                         oninput="updateDailyCommuteFromInput(this.value)" onchange="updateTransportCalculation()">
+                </div>
+              </div>
+            </div>
+
+            <!-- Car Usage -->
+            <div class="mb-10">
+              <h4 class="text-xl font-semibold text-slate-700 mb-6 flex items-center">
+                <i class="fas fa-car text-red-500 mr-2"></i>
+                Car Usage 🚗
+              </h4>
+              <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                  <label class="block text-sm font-medium text-slate-600 mb-2">Car Type</label>
+                  <select class="form-select" id="carType" onchange="updateTransportCalculation()">
+                    <option value="petrol">Petrol</option>
+                    <option value="diesel">Diesel</option>
+                    <option value="electric">Electric</option>
+                    <option value="hybrid">Hybrid</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-slate-600 mb-2">Km per day</label>
+                  <input type="number" min="0" placeholder="0" class="form-input" id="carKmDay" 
+                         oninput="updateTransportCalculation()">
+                </div>
+              </div>
+            </div>
+
+            <!-- Public Transport -->
+            <div class="mb-10">
+              <h4 class="text-xl font-semibold text-slate-700 mb-6 flex items-center">
+                <i class="fas fa-bus text-green-500 mr-2"></i>
+                Public Transport 🚌🚇🚆
+              </h4>
+              <div class="space-y-4">
+                <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                  <div class="flex items-center">
+                    <input type="checkbox" id="metroToggle" class="mr-3 w-5 h-5 text-blue-600" onchange="togglePublicTransport('metro')">
+                    <label for="metroToggle" class="font-medium text-slate-700">Metro 🚇</label>
+                  </div>
+                  <input type="number" min="0" placeholder="km/day" class="form-input w-32" id="metroKm" 
+                         disabled oninput="updateTransportCalculation()">
+                </div>
+                <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                  <div class="flex items-center">
+                    <input type="checkbox" id="busToggle" class="mr-3 w-5 h-5 text-blue-600" onchange="togglePublicTransport('bus')">
+                    <label for="busToggle" class="font-medium text-slate-700">Bus 🚌</label>
+                  </div>
+                  <input type="number" min="0" placeholder="km/day" class="form-input w-32" id="busKm" 
+                         disabled oninput="updateTransportCalculation()">
+                </div>
+                <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                  <div class="flex items-center">
+                    <input type="checkbox" id="trainToggle" class="mr-3 w-5 h-5 text-blue-600" onchange="togglePublicTransport('train')">
+                    <label for="trainToggle" class="font-medium text-slate-700">Train 🚆</label>
+                  </div>
+                  <input type="number" min="0" placeholder="km/day" class="form-input w-32" id="trainKm" 
+                         disabled oninput="updateTransportCalculation()">
+                </div>
+              </div>
+            </div>
+
+            <!-- Flights -->
+            <div class="mb-10">
+              <h4 class="text-xl font-semibold text-slate-700 mb-6 flex items-center">
+                <i class="fas fa-plane text-blue-500 mr-2"></i>
+                Flights ✈️
+              </h4>
+              <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                  <label class="block text-sm font-medium text-slate-600 mb-2">Flight Type</label>
+                  <select class="form-select" id="flightType" onchange="updateTransportCalculation()">
+                    <option value="short">Short-Haul (&lt;3 hrs)</option>
+                    <option value="long">Long-Haul (&gt;3 hrs)</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-slate-600 mb-2">Trips per year</label>
+                  <input type="number" min="0" placeholder="0" class="form-input" id="flightTrips" 
+                         oninput="updateTransportCalculation()">
+                </div>
+              </div>
+            </div>
+
+            <!-- Ride-Sharing / Taxis -->
+            <div class="mb-8">
+              <h4 class="text-xl font-semibold text-slate-700 mb-6 flex items-center">
+                <i class="fas fa-taxi text-yellow-500 mr-2"></i>
+                Ride-Sharing / Taxis 🚕
+              </h4>
+              <div class="bg-yellow-50 rounded-xl p-6">
+                <div class="flex items-center justify-between mb-4">
+                  <label class="font-medium text-slate-700">Use ride-sharing services?</label>
+                  <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" class="sr-only peer" id="rideShareToggle" onchange="toggleRideShare()">
+                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                  </label>
+                </div>
+                <div id="rideShareInput" class="hidden">
+                  <label class="block text-sm font-medium text-slate-600 mb-2">Km per day</label>
+                  <input type="number" min="0" placeholder="0" class="form-input w-32" id="rideShareKm" 
+                         oninput="updateTransportCalculation()">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Real-Time Feedback -->
+        <div class="sticky top-8" data-aos="fade-left">
+          <div class="bg-gradient-to-br from-blue-50 to-green-50 rounded-3xl p-8 shadow-xl border border-blue-200">
+            <!-- Results Card Header -->
+            <div class="text-center mb-8">
+              <h3 class="text-2xl font-bold text-slate-800 mb-2">Transportation Footprint</h3>
+              <p class="text-lg text-blue-600 font-semibold" id="transportResultText">
+                Your transportation footprint today: <span id="transportTodayEmissions">4.2</span> kg CO₂
+              </p>
+            </div>
+            
+            <!-- Circular Progress Gauge -->
+            <div class="mb-8 flex justify-center">
+              <div class="relative w-48 h-48">
+                <svg class="w-48 h-48 transform -rotate-90" viewBox="0 0 100 100">
+                  <!-- Background circle -->
+                  <circle cx="50" cy="50" r="40" stroke="#e5e7eb" stroke-width="8" fill="none"/>
+                  <!-- Progress circle -->
+                  <circle cx="50" cy="50" r="40" stroke="url(#gradient)" stroke-width="8" fill="none"
+                          stroke-dasharray="251.2" stroke-dashoffset="188.4" 
+                          id="progressCircle" class="transition-all duration-500 ease-out"/>
+                  <!-- Gradient definition -->
+                  <defs>
+                    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" style="stop-color:#3b82f6"/>
+                      <stop offset="100%" style="stop-color:#10b981"/>
+                    </linearGradient>
+                  </defs>
+                </svg>
+                <!-- Center content -->
+                <div class="absolute inset-0 flex items-center justify-center">
+                  <div class="text-center">
+                    <div class="text-3xl font-black text-blue-600" id="transportGaugeValue">4.2</div>
+                    <div class="text-sm text-slate-600 font-medium">kg CO₂</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Transport Breakdown -->
+            <div class="space-y-4 mb-8">
+              <h4 class="text-lg font-semibold text-slate-700 text-center mb-4">Breakdown by Mode</h4>
+              
+              <div class="flex items-center justify-between p-3 bg-white rounded-lg shadow-sm">
+                <div class="flex items-center">
+                  <i class="fas fa-car text-red-500 mr-3"></i>
+                  <span class="font-medium text-slate-700">Car</span>
+                </div>
+                <span class="font-bold text-red-600" id="carEmissions">2.8 kg</span>
+              </div>
+              
+              <div class="flex items-center justify-between p-3 bg-white rounded-lg shadow-sm">
+                <div class="flex items-center">
+                  <i class="fas fa-bus text-green-500 mr-3"></i>
+                  <span class="font-medium text-slate-700">Public Transport</span>
+                </div>
+                <span class="font-bold text-green-600" id="publicEmissions">0.8 kg</span>
+              </div>
+              
+              <div class="flex items-center justify-between p-3 bg-white rounded-lg shadow-sm">
+                <div class="flex items-center">
+                  <i class="fas fa-plane text-blue-500 mr-3"></i>
+                  <span class="font-medium text-slate-700">Flights</span>
+                </div>
+                <span class="font-bold text-blue-600" id="flightEmissions">0.4 kg</span>
+              </div>
+              
+              <div class="flex items-center justify-between p-3 bg-white rounded-lg shadow-sm">
+                <div class="flex items-center">
+                  <i class="fas fa-taxi text-yellow-500 mr-3"></i>
+                  <span class="font-medium text-slate-700">Ride-share</span>
+                </div>
+                <span class="font-bold text-yellow-600" id="rideShareEmissions">0.2 kg</span>
+              </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="mb-6">
+              <div class="flex justify-between text-sm text-slate-600 mb-2">
+                <span>Daily Target: 5.0 kg CO₂</span>
+                <span id="progressPercentage">84%</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-3">
+                <div class="bg-gradient-to-r from-blue-500 to-green-500 h-3 rounded-full transition-all duration-500" 
+                     id="progressBar" style="width: 84%"></div>
+              </div>
+            </div>
+
+            <!-- Quick Tips -->
+            <div class="bg-blue-50 border border-blue-200 rounded-xl p-4">
+              <h4 class="font-bold text-blue-700 mb-2">💡 Quick Tip</h4>
+              <p class="text-sm text-blue-600" id="transportTip">
+                Taking public transport instead of driving could save you 2.0 kg CO₂ today!
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Food & Diet Tab -->
+    <div id="food" class="tab-content">
+      <div class="grid lg:grid-cols-3 gap-8">
+        <div class="lg:col-span-2 space-y-6" data-aos="fade-right">
+          <div class="bg-white rounded-3xl p-8 shadow-lg border border-orange-100">
+            <h3 class="text-2xl font-bold text-slate-800 mb-6">
+              <i class="fas fa-utensils text-orange-500 mr-3"></i>
+              Food & Diet 🍲🥩🥦
+            </h3>
+            
+            <!-- Meals per Week -->
+            <div class="mb-8">
+              <h4 class="text-lg font-semibold text-slate-700 mb-4">Meals per Week by Type</h4>
+              <div class="grid md:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm font-medium text-slate-600 mb-2">Vegetarian meals</label>
+                  <input type="range" min="0" max="21" value="10" class="slider mb-2" id="vegMeals" oninput="updateFoodValue('veg', this.value)">
+                  <div class="text-center text-sm text-slate-500" id="vegValue">10 meals</div>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-slate-600 mb-2">Chicken meals</label>
+                  <input type="range" min="0" max="21" value="5" class="slider mb-2" id="chickenMeals" oninput="updateFoodValue('chicken', this.value)">
+                  <div class="text-center text-sm text-slate-500" id="chickenValue">5 meals</div>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-slate-600 mb-2">Beef meals</label>
+                  <input type="range" min="0" max="21" value="2" class="slider mb-2" id="beefMeals" oninput="updateFoodValue('beef', this.value)">
+                  <div class="text-center text-sm text-slate-500" id="beefValue">2 meals</div>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-slate-600 mb-2">Dairy products (servings/week)</label>
+                  <input type="range" min="0" max="35" value="14" class="slider mb-2" id="dairyMeals" oninput="updateFoodValue('dairy', this.value)">
+                  <div class="text-center text-sm text-slate-500" id="dairyValue">14 servings</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Restaurant vs Home-cooked -->
+            <div class="mb-8">
+              <h4 class="text-lg font-semibold text-slate-700 mb-4">Restaurant vs Home-cooked</h4>
+              <div class="grid md:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm font-medium text-slate-600 mb-2">Restaurant meals/week</label>
+                  <input type="number" placeholder="0" class="form-input" id="restaurantMeals" oninput="updateCalculation()">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-slate-600 mb-2">Home-cooked meals/week</label>
+                  <input type="number" placeholder="21" class="form-input" id="homeMeals" oninput="updateCalculation()">
+                </div>
+              </div>
+            </div>
+
+            <!-- Local vs Imported -->
+            <div class="mb-8">
+              <h4 class="text-lg font-semibold text-slate-700 mb-4">Produce Source</h4>
+              <div class="flex items-center gap-4">
+                <label class="flex items-center">
+                  <input type="radio" name="produce" value="local" class="mr-2" onchange="updateCalculation()">
+                  <span>Mostly Local</span>
+                </label>
+                <label class="flex items-center">
+                  <input type="radio" name="produce" value="mixed" class="mr-2" checked onchange="updateCalculation()">
+                  <span>Mixed</span>
+                </label>
+                <label class="flex items-center">
+                  <input type="radio" name="produce" value="imported" class="mr-2" onchange="updateCalculation()">
+                  <span>Mostly Imported</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Food Carbon Calculator -->
+            <div class="mb-8 bg-gradient-to-r from-orange-50 to-red-50 rounded-xl p-6">
+              <h4 class="text-lg font-semibold text-slate-700 mb-4">
+                <i class="fas fa-calculator text-orange-500 mr-2"></i>
+                Food Carbon Calculator
+              </h4>
+              <div class="grid md:grid-cols-3 gap-4">
+                <div class="md:col-span-2">
+                  <input type="text" placeholder="e.g., butter chicken, beef burger, quinoa salad" 
+                         class="form-input" id="dishInput" oninput="calculateDishCarbon()">
+                </div>
+                <div>
+                  <select class="form-select" id="dishPortion">
+                    <option value="small">Small</option>
+                    <option value="medium" selected>Medium</option>
+                    <option value="large">Large</option>
+                  </select>
+                </div>
+              </div>
+              <div class="mt-4 text-center">
+                <div class="text-2xl font-bold text-orange-600" id="dishCarbon">0.0</div>
+                <div class="text-sm text-slate-600">kg CO₂ for this dish</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Results Panel (same as transportation) -->
+        <div class="sticky top-8" data-aos="fade-left">
+          <div class="bg-gradient-to-br from-green-50 to-blue-50 rounded-3xl p-8 shadow-xl">
+            <h3 class="text-2xl font-bold text-slate-800 mb-6 text-center">Food Impact</h3>
+            <div class="progress-gauge mb-6">
+              <div class="relative z-10 text-center">
+                <div class="text-4xl font-black text-orange-600" id="foodTotalEmissions">8.5</div>
+                <div class="text-sm text-slate-600 font-medium">kg CO₂/day</div>
+              </div>
+            </div>
+            <div class="space-y-3 text-sm">
+              <div class="flex justify-between">
+                <span>🥗 Vegetarian</span>
+                <span class="font-semibold text-green-600" id="vegEmissions">2.1 kg</span>
+              </div>
+              <div class="flex justify-between">
+                <span>🐟 Chicken</span>
+                <span class="font-semibold text-yellow-600" id="chickenEmissions">3.2 kg</span>
+              </div>
+              <div class="flex justify-between">
+                <span>🐄 Beef</span>
+                <span class="font-semibold text-red-600" id="beefEmissions">3.2 kg</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Energy Usage Tab -->
+    <div id="energy" class="tab-content">
+      <div class="max-w-4xl mx-auto" data-aos="fade-up">
+        <div class="bg-white rounded-3xl p-8 shadow-lg border border-blue-100">
+          <h3 class="text-2xl font-bold text-slate-800 mb-6 text-center">
+            <i class="fas fa-camera text-blue-500 mr-2"></i>
+            Upload Your Receipts
+          </h3>
+          
+          <!-- Drag & Drop Area -->
+          <div class="drag-drop-area" id="dropArea" onclick="document.getElementById('fileInput').click()">
+            <div class="mb-4">
+              <i class="fas fa-cloud-upload-alt text-6xl text-slate-400"></i>
+            </div>
+            <h4 class="text-xl font-semibold text-slate-700 mb-2">Drop receipts here or click to upload</h4>
+            <p class="text-slate-500 mb-4">Supports JPG, PNG, PDF files up to 10MB</p>
+            <div class="inline-flex items-center px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+              <i class="fas fa-plus mr-2"></i>
+              Choose Files
+            </div>
+          </div>
+          
+          <input type="file" id="fileInput" multiple accept="image/*,.pdf" style="display: none;" onchange="handleFiles(this.files)">
+          
+          <!-- File Preview -->
+          <div id="filePreview" class="mt-8 grid grid-cols-2 md:grid-cols-3 gap-4" style="display: none;">
+            <!-- Files will be displayed here -->
+          </div>
+          
+          <!-- AI Processing Results -->
+          <div id="aiResults" class="mt-8 bg-green-50 border border-green-200 rounded-xl p-6" style="display: none;">
+            <h4 class="font-bold text-green-700 mb-4">
+              <i class="fas fa-robot mr-2"></i>
+              AI Analysis Complete
+            </h4>
+            <div class="space-y-3">
+              <div class="flex justify-between">
+                <span>Groceries (Organic foods)</span>
+                <span class="font-semibold text-green-600">2.3 kg CO₂</span>
+              </div>
+              <div class="flex justify-between">
+                <span>Fuel (Petrol station)</span>
+                <span class="font-semibold text-red-600">15.7 kg CO₂</span>
+              </div>
+              <div class="flex justify-between">
+                <span>Restaurant (Local dining)</span>
+                <span class="font-semibold text-orange-600">4.1 kg CO₂</span>
+              </div>
+              <hr class="my-3">
+              <div class="flex justify-between text-lg font-bold">
+                <span>Total Impact</span>
+                <span class="text-slate-800">22.1 kg CO₂</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Food Calculator Tab -->
+    <div id="calculator" class="tab-content">
+      <div class="max-w-4xl mx-auto" data-aos="fade-up">
+        <div class="bg-white rounded-3xl p-8 shadow-lg border border-orange-100">
+          <h3 class="text-2xl font-bold text-slate-800 mb-6 text-center">
+            <i class="fas fa-utensils text-orange-500 mr-2"></i>
+            Food Carbon Calculator
+          </h3>
+          
+          <div class="grid md:grid-cols-2 gap-8">
+            <!-- Input Section -->
+            <div>
+              <label class="block text-lg font-semibold text-slate-700 mb-4">
+                What did you eat?
+              </label>
+              <input type="text" placeholder="e.g., butter chicken, beef burger, quinoa salad" 
+                     class="form-input mb-4" id="foodInput" oninput="calculateFoodCarbon()">
+              
+              <div class="mb-4">
+                <label class="block text-sm font-medium text-slate-600 mb-2">Portion size</label>
+                <select class="form-select" id="portionSize">
+                  <option value="small">Small</option>
+                  <option value="medium" selected>Medium</option>
+                  <option value="large">Large</option>
+                </select>
+              </div>
+              
+              <button class="btn-primary w-full" onclick="calculateFoodCarbon()">
+                <i class="fas fa-calculator"></i>
+                Calculate Emissions
+              </button>
+            </div>
+            
+            <!-- Results Section -->
+            <div class="bg-gradient-to-br from-orange-50 to-red-50 rounded-xl p-6">
+              <h4 class="font-bold text-slate-800 mb-4">Emission Estimate</h4>
+              
+              <div class="text-center mb-6">
+                <div class="text-4xl font-black text-orange-600" id="foodCarbonResult">0.0</div>
+                <div class="text-sm text-slate-600">kg CO₂ equivalent</div>
+              </div>
+              
+              <!-- Food Comparison -->
+              <div class="space-y-3 text-sm">
+                <div class="flex justify-between">
+                  <span>🥗 Vegan meal</span>
+                  <span class="text-green-600">0.5 kg CO₂</span>
+                </div>
+                <div class="flex justify-between">
+                  <span>🐟 Fish meal</span>
+                  <span class="text-yellow-600">2.1 kg CO₂</span>
+                </div>
+                <div class="flex justify-between">
+                  <span>🐄 Beef meal</span>
+                  <span class="text-red-600">6.8 kg CO₂</span>
+                </div>
+              </div>
+              
+              <div class="mt-6 p-4 bg-white rounded-lg">
+                <p class="text-sm text-slate-600">
+                  <i class="fas fa-lightbulb text-yellow-500 mr-1"></i>
+                  <strong>Tip:</strong> Choosing plant-based options can reduce your food carbon footprint by up to 70%!
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Initialize AOS
+  AOS.init({
+    duration: 800,
+    once: true,
+    offset: 100
+  });
+
+  // Tab switching functionality
+  function switchTab(tabName) {
+    // Hide all tab contents
+    document.querySelectorAll('.tab-content').forEach(content => {
+      content.classList.remove('active');
+    });
+    
+    // Remove active class from all buttons
+    document.querySelectorAll('.tab-button').forEach(button => {
+      button.classList.remove('active');
+    });
+    
+    // Show selected tab content
+    document.getElementById(tabName).classList.add('active');
+    
+    // Add active class to clicked button
+    event.target.classList.add('active');
+  }
+
+  // Transportation-specific functions
+  function updateDailyCommute(value) {
+    document.getElementById('dailyCommuteValue').textContent = value;
+    document.getElementById('dailyCommuteInput').value = value;
+    updateTransportCalculation();
+  }
+
+  function updateDailyCommuteFromInput(value) {
+    if (value >= 0 && value <= 200) {
+      document.getElementById('dailyCommuteSlider').value = value;
+      document.getElementById('dailyCommuteValue').textContent = value;
+      updateTransportCalculation();
+    }
+  }
+
+  function togglePublicTransport(type) {
+    const toggle = document.getElementById(type + 'Toggle');
+    const input = document.getElementById(type + 'Km');
+    
+    if (toggle.checked) {
+      input.disabled = false;
+      input.focus();
+    } else {
+      input.disabled = true;
+      input.value = '';
+    }
+    updateTransportCalculation();
+  }
+
+  function toggleRideShare() {
+    const toggle = document.getElementById('rideShareToggle');
+    const input = document.getElementById('rideShareInput');
+    
+    if (toggle.checked) {
+      input.classList.remove('hidden');
+      document.getElementById('rideShareKm').focus();
+    } else {
+      input.classList.add('hidden');
+      document.getElementById('rideShareKm').value = '';
+    }
+    updateTransportCalculation();
+  }
+
+  function updateTransportCalculation() {
+    // Get all input values
+    const dailyCommute = parseFloat(document.getElementById('dailyCommuteSlider').value) || 0;
+    const carType = document.getElementById('carType').value;
+    const carKmDay = parseFloat(document.getElementById('carKmDay').value) || 0;
+    const metroKm = document.getElementById('metroToggle').checked ? (parseFloat(document.getElementById('metroKm').value) || 0) : 0;
+    const busKm = document.getElementById('busToggle').checked ? (parseFloat(document.getElementById('busKm').value) || 0) : 0;
+    const trainKm = document.getElementById('trainToggle').checked ? (parseFloat(document.getElementById('trainKm').value) || 0) : 0;
+    const flightType = document.getElementById('flightType').value;
+    const flightTrips = parseFloat(document.getElementById('flightTrips').value) || 0;
+    const rideShareKm = document.getElementById('rideShareToggle').checked ? (parseFloat(document.getElementById('rideShareKm').value) || 0) : 0;
+
+    // Carbon emission factors (kg CO2 per km)
+    const emissionFactors = {
+      petrol: 0.21,
+      diesel: 0.24,
+      electric: 0.05,
+      hybrid: 0.12,
+      metro: 0.04,
+      bus: 0.08,
+      train: 0.06,
+      shortFlight: 0.25, // per km
+      longFlight: 0.18,  // per km
+      rideShare: 0.19
+    };
+
+    // Calculate emissions (all now daily values)
+    const carEmissions = (dailyCommute + carKmDay) * emissionFactors[carType];
+    const publicEmissions = metroKm * emissionFactors.metro + 
+                           busKm * emissionFactors.bus + 
+                           trainKm * emissionFactors.train;
+    
+    // Estimate flight distance (short: 500km avg, long: 2000km avg)
+    const flightDistance = flightType === 'short' ? 500 : 2000;
+    const flightEmissions = (flightTrips * flightDistance * emissionFactors[flightType + 'Flight']) / 365;
+    
+    const rideShareEmissions = rideShareKm * emissionFactors.rideShare;
+
+    const totalEmissions = carEmissions + publicEmissions + flightEmissions + rideShareEmissions;
+
+    // Update display with smooth animations
+    animateValue('transportTodayEmissions', totalEmissions.toFixed(1));
+    animateValue('transportGaugeValue', totalEmissions.toFixed(1));
+    animateValue('carEmissions', carEmissions.toFixed(1) + ' kg');
+    animateValue('publicEmissions', publicEmissions.toFixed(1) + ' kg');
+    animateValue('flightEmissions', flightEmissions.toFixed(1) + ' kg');
+    animateValue('rideShareEmissions', rideShareEmissions.toFixed(1) + ' kg');
+
+    // Update circular progress gauge
+    updateProgressGauge(totalEmissions);
+    
+    // Update progress bar
+    const targetEmissions = 5.0;
+    const percentage = Math.min((totalEmissions / targetEmissions) * 100, 100);
+    document.getElementById('progressPercentage').textContent = percentage.toFixed(0) + '%';
+    document.getElementById('progressBar').style.width = percentage + '%';
+
+    // Update tip
+    updateTransportTip(carEmissions, publicEmissions, totalEmissions);
+    
+    // Update global totals
+    updateGlobalTotals();
+  }
+
+  function animateValue(elementId, newValue) {
+    const element = document.getElementById(elementId);
+    if (!element) return;
+    
+    element.style.transition = 'all 0.3s ease';
+    element.textContent = newValue;
+  }
+
+  function updateProgressGauge(value) {
+    const maxValue = 10; // Max expected daily transport emissions
+    const percentage = Math.min(value / maxValue, 1);
+    const circumference = 251.2; // 2 * π * 40
+    const offset = circumference - (percentage * circumference);
+    
+    const circle = document.getElementById('progressCircle');
+    if (circle) {
+      circle.style.strokeDashoffset = offset;
+    }
+  }
+
+  function updateTransportTip(carEmissions, publicEmissions, totalEmissions) {
+    const tipElement = document.getElementById('transportTip');
+    if (!tipElement) return;
+    
+    if (carEmissions > publicEmissions && carEmissions > 2) {
+      const savings = (carEmissions * 0.7).toFixed(1);
+      tipElement.textContent = `Taking public transport instead of driving could save you ${savings} kg CO₂ today!`;
+    } else if (totalEmissions > 5) {
+      tipElement.textContent = 'Consider combining trips or working from home to reduce your transport footprint.';
+    } else {
+      tipElement.textContent = 'Great job! Your transport emissions are within the sustainable range.';
+    }
+  }
+
+  function updateGlobalTotals() {
+    // This would update the header stats
+    const transportEmissions = parseFloat(document.getElementById('transportTodayEmissions').textContent) || 0;
+    document.getElementById('todayTotal').textContent = transportEmissions.toFixed(1);
+  }
+
+  function toggleTooltip() {
+    const tooltip = document.getElementById('tooltip');
+    tooltip.classList.toggle('opacity-0');
+    tooltip.classList.toggle('invisible');
+  }
+
+  // Update slider values
+  function updateValue(type, value) {
+    document.getElementById(type + 'Value').textContent = value + ' km';
+    updateCalculation();
+  }
+
+  // Real-time calculation
+  function updateCalculation() {
+    const travel = parseInt(document.getElementById('travelSlider').value) || 0;
+    const meat = parseInt(document.getElementById('meatMeals').value) || 0;
+    const electricity = parseInt(document.getElementById('electricity').value) || 0;
+    const shopping = document.getElementById('shopping').value;
+    
+    // Simple calculation (replace with actual API call)
+    const travelEmissions = travel * 0.17; // kg CO2 per km
+    const foodEmissions = meat * 0.83; // kg CO2 per meal per week / 7
+    const energyEmissions = electricity * 0.007; // kg CO2 per kWh / 30 days
+    const shoppingMultiplier = shopping === 'low' ? 0.5 : shopping === 'high' ? 2 : 1;
+    const shoppingEmissions = 0.4 * shoppingMultiplier;
+    
+    const total = travelEmissions + foodEmissions + energyEmissions + shoppingEmissions;
+    
+    // Update display
+    document.getElementById('totalEmissions').textContent = total.toFixed(1);
+    document.getElementById('travelEmissions').textContent = travelEmissions.toFixed(1);
+    document.getElementById('foodEmissions').textContent = foodEmissions.toFixed(1);
+    document.getElementById('energyEmissions').textContent = energyEmissions.toFixed(1);
+    document.getElementById('shoppingEmissions').textContent = shoppingEmissions.toFixed(1);
+    
+    // Update hotspot
+    const categories = [
+      { name: 'Travel', value: travelEmissions },
+      { name: 'Food', value: foodEmissions },
+      { name: 'Energy', value: energyEmissions },
+      { name: 'Shopping', value: shoppingEmissions }
+    ];
+    
+    const hotspot = categories.reduce((max, cat) => cat.value > max.value ? cat : max);
+    document.getElementById('hotspot').textContent = `${hotspot.name} is your highest emission source`;
+  }
+
+  // File upload handling
+  function handleFiles(files) {
+    const preview = document.getElementById('filePreview');
+    const results = document.getElementById('aiResults');
+    
+    preview.style.display = 'grid';
+    preview.innerHTML = '';
+    
+    Array.from(files).forEach(file => {
+      const div = document.createElement('div');
+      div.className = 'bg-gray-100 rounded-lg p-4 text-center';
+      div.innerHTML = `
+        <i class="fas fa-file-image text-2xl text-blue-500 mb-2"></i>
+        <div class="text-sm font-medium truncate">${file.name}</div>
+        <div class="text-xs text-gray-500">${(file.size / 1024).toFixed(1)} KB</div>
+      `;
+      preview.appendChild(div);
+    });
+    
+    // Simulate AI processing
+    setTimeout(() => {
+      results.style.display = 'block';
+    }, 2000);
+  }
+
+  // Drag and drop functionality
+  const dropArea = document.getElementById('dropArea');
+  
+  ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+    dropArea.addEventListener(eventName, preventDefaults, false);
+  });
+  
+  function preventDefaults(e) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+  
+  ['dragenter', 'dragover'].forEach(eventName => {
+    dropArea.addEventListener(eventName, () => dropArea.classList.add('dragover'), false);
+  });
+  
+  ['dragleave', 'drop'].forEach(eventName => {
+    dropArea.addEventListener(eventName, () => dropArea.classList.remove('dragover'), false);
+  });
+  
+  dropArea.addEventListener('drop', (e) => {
+    const files = e.dataTransfer.files;
+    handleFiles(files);
+  });
+
+  // Food carbon calculator
+  function calculateFoodCarbon() {
+    const food = document.getElementById('foodInput').value.toLowerCase();
+    const portion = document.getElementById('portionSize').value;
+    
+    // Simple food carbon database (replace with actual API)
+    const foodDatabase = {
+      'beef': 6.8,
+      'burger': 5.2,
+      'chicken': 2.1,
+      'fish': 1.8,
+      'pork': 3.4,
+      'lamb': 7.2,
+      'cheese': 2.8,
+      'milk': 0.9,
+      'egg': 1.1,
+      'rice': 0.4,
+      'pasta': 0.3,
+      'bread': 0.2,
+      'vegetable': 0.1,
+      'fruit': 0.1,
+      'quinoa': 0.2,
+      'tofu': 0.3
+    };
+    
+    let emissions = 0;
+    Object.keys(foodDatabase).forEach(key => {
+      if (food.includes(key)) {
+        emissions = Math.max(emissions, foodDatabase[key]);
+      }
+    });
+    
+    // Adjust for portion size
+    const portionMultiplier = portion === 'small' ? 0.7 : portion === 'large' ? 1.5 : 1;
+    emissions *= portionMultiplier;
+    
+    document.getElementById('foodCarbonResult').textContent = emissions.toFixed(1);
+  }
+
+  // Save to dashboard
+  function saveToDashboard() {
+    // Simulate saving data
+    alert('Data saved! Redirecting to dashboard...');
+    // In real implementation, this would save to backend and redirect
+    // window.location.href = '/dashboard/';
+  }
+
+  // Initialize calculations
+  updateCalculation();
+</script>
+
+{% endblock %}
