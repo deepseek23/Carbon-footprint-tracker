@@ -1648,6 +1648,392 @@
       </div>
     </div>
 
+    <!-- Waste & Recycling Tab -->
+    <div id="waste" class="tab-content">
+      <div class="grid lg:grid-cols-2 gap-12">
+        <!-- Input Section -->
+        <div class="space-y-8" data-aos="fade-right">
+          <div class="bg-white rounded-3xl p-8 shadow-lg border border-green-100">
+            <!-- Section Header -->
+            <div class="mb-8">
+              <h3 class="text-3xl font-bold text-slate-800 mb-3">
+                <i class="fas fa-recycle text-green-500 mr-3"></i>
+                Waste & Recycling
+              </h3>
+              <p class="text-lg text-slate-600">Track your waste generation and recycling habits to understand your environmental impact.</p>
+            </div>
+            
+            <!-- Manual Entry Panel -->
+            <div class="mb-10">
+              <h4 class="text-xl font-semibold text-slate-700 mb-6 flex items-center">
+                <i class="fas fa-keyboard text-green-500 mr-2"></i>
+                Manual Entry
+              </h4>
+
+              <!-- Plastic Waste -->
+              <div class="mb-10">
+                <h5 class="text-lg font-semibold text-slate-700 mb-6 flex items-center">
+                  <span class="text-2xl mr-2">🥤</span>
+                  Plastic Waste
+                </h5>
+                <div class="bg-red-50 rounded-xl p-6">
+                  <div class="mb-6">
+                    <div class="flex justify-between items-center mb-3">
+                      <label class="text-sm font-medium text-slate-600">Plastic waste generated per week (kg)</label>
+                      <div class="flex items-center gap-2">
+                        <span class="text-2xl font-bold text-red-600" id="plasticValue">2.5</span>
+                        <span class="text-sm text-slate-500">kg</span>
+                        <span class="text-sm font-semibold text-red-600" id="plasticCO2">15.0 kg CO₂</span>
+                      </div>
+                    </div>
+                    <input type="range" min="0" max="10" step="0.1" value="2.5" class="slider w-full mb-3" id="plasticSlider" 
+                           oninput="updateWasteSlider('plastic', this.value)">
+                    <div class="flex justify-between text-xs text-slate-500">
+                      <span>0 kg</span>
+                      <span>10 kg</span>
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <label class="block text-sm font-medium text-slate-600 mb-2">Manual Input (kg)</label>
+                    <input type="number" min="0" max="10" step="0.1" value="2.5" class="form-input w-32" id="plasticInput" 
+                           oninput="updateWasteFromInput('plastic', this.value)">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Paper/Cardboard Recycling -->
+              <div class="mb-10">
+                <h5 class="text-lg font-semibold text-slate-700 mb-6 flex items-center">
+                  <span class="text-2xl mr-2">📄</span>
+                  Paper / Cardboard Recycling
+                </h5>
+                <div class="bg-blue-50 rounded-xl p-6">
+                  <div class="flex items-center justify-between mb-6">
+                    <span class="font-medium text-slate-700">Do you recycle paper?</span>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" class="sr-only peer" id="paperToggle" onchange="togglePaperRecycling()">
+                      <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
+                    </label>
+                  </div>
+                  
+                  <div id="paperRecyclingInput" class="hidden">
+                    <div class="mb-4">
+                      <div class="flex justify-between items-center mb-3">
+                        <label class="text-sm font-medium text-slate-600">Amount recycled per week (kg)</label>
+                        <div class="flex items-center gap-2">
+                          <span class="text-2xl font-bold text-blue-600" id="paperValue">3.0</span>
+                          <span class="text-sm text-slate-500">kg</span>
+                          <span class="text-sm font-semibold text-green-600" id="paperCO2">-9.0 kg CO₂</span>
+                        </div>
+                      </div>
+                      <input type="range" min="0" max="15" step="0.1" value="3.0" class="slider w-full mb-3" id="paperSlider" 
+                             oninput="updateWasteSlider('paper', this.value)">
+                      <div class="flex justify-between text-xs text-slate-500">
+                        <span>0 kg</span>
+                        <span>15 kg</span>
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <label class="block text-sm font-medium text-slate-600 mb-2">Manual Input (kg)</label>
+                      <input type="number" min="0" max="15" step="0.1" value="3.0" class="form-input w-32" id="paperInput" 
+                             oninput="updateWasteFromInput('paper', this.value)">
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Glass/Metal Recycling -->
+              <div class="mb-10">
+                <h5 class="text-lg font-semibold text-slate-700 mb-6 flex items-center">
+                  <span class="text-2xl mr-2">🍾</span>
+                  Glass / Metal Recycling
+                </h5>
+                <div class="bg-purple-50 rounded-xl p-6">
+                  <div class="flex items-center justify-between mb-6">
+                    <span class="font-medium text-slate-700">Do you recycle glass/metal?</span>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" class="sr-only peer" id="glassToggle" onchange="toggleGlassRecycling()">
+                      <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
+                    </label>
+                  </div>
+                  
+                  <div id="glassRecyclingInput" class="hidden">
+                    <div class="mb-4">
+                      <div class="flex justify-between items-center mb-3">
+                        <label class="text-sm font-medium text-slate-600">Quantity recycled per week (kg)</label>
+                        <div class="flex items-center gap-2">
+                          <span class="text-2xl font-bold text-purple-600" id="glassValue">1.5</span>
+                          <span class="text-sm text-slate-500">kg</span>
+                          <span class="text-sm font-semibold text-green-600" id="glassCO2">-6.0 kg CO₂</span>
+                        </div>
+                      </div>
+                      <input type="range" min="0" max="10" step="0.1" value="1.5" class="slider w-full mb-3" id="glassSlider" 
+                             oninput="updateWasteSlider('glass', this.value)">
+                      <div class="flex justify-between text-xs text-slate-500">
+                        <span>0 kg</span>
+                        <span>10 kg</span>
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <label class="block text-sm font-medium text-slate-600 mb-2">Manual Input (kg)</label>
+                      <input type="number" min="0" max="10" step="0.1" value="1.5" class="form-input w-32" id="glassInput" 
+                             oninput="updateWasteFromInput('glass', this.value)">
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Composting/Organic Waste -->
+              <div class="mb-10">
+                <h5 class="text-lg font-semibold text-slate-700 mb-6 flex items-center">
+                  <span class="text-2xl mr-2">🗑️</span>
+                  Composting / Organic Waste
+                </h5>
+                <div class="bg-green-50 rounded-xl p-6">
+                  <div class="flex items-center justify-between mb-6">
+                    <span class="font-medium text-slate-700">Do you compost?</span>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" class="sr-only peer" id="compostToggle" onchange="toggleComposting()">
+                      <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
+                    </label>
+                  </div>
+                  
+                  <div id="compostInput" class="hidden">
+                    <div class="mb-4">
+                      <div class="flex justify-between items-center mb-3">
+                        <label class="text-sm font-medium text-slate-600">Amount composted per week (kg)</label>
+                        <div class="flex items-center gap-2">
+                          <span class="text-2xl font-bold text-green-600" id="compostValue">4.0</span>
+                          <span class="text-sm text-slate-500">kg</span>
+                          <span class="text-sm font-semibold text-green-600" id="compostCO2">-8.0 kg CO₂</span>
+                        </div>
+                      </div>
+                      <input type="range" min="0" max="20" step="0.1" value="4.0" class="slider w-full mb-3" id="compostSlider" 
+                             oninput="updateWasteSlider('compost', this.value)">
+                      <div class="flex justify-between text-xs text-slate-500">
+                        <span>0 kg</span>
+                        <span>20 kg</span>
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <label class="block text-sm font-medium text-slate-600 mb-2">Manual Input (kg)</label>
+                      <input type="number" min="0" max="20" step="0.1" value="4.0" class="form-input w-32" id="compostInputField" 
+                             oninput="updateWasteFromInput('compost', this.value)">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Upload Receipts/Photos Panel -->
+            <div class="mb-8">
+              <h4 class="text-xl font-semibold text-slate-700 mb-6 flex items-center">
+                <i class="fas fa-camera text-green-500 mr-2"></i>
+                Upload Receipts / Photos (Optional)
+              </h4>
+              
+              <!-- Drag & Drop Area -->
+              <div class="mb-8">
+                <div class="drag-drop-area border-2 border-dashed border-green-300 rounded-xl p-8 text-center bg-green-50 hover:bg-green-100 transition-colors cursor-pointer" 
+                     id="wasteDropArea" onclick="document.getElementById('wasteFileInput').click()">
+                  <div class="mb-4">
+                    <i class="fas fa-camera text-6xl text-green-500 mb-4"></i>
+                    <h4 class="text-xl font-semibold text-slate-700 mb-2">Drop waste photos or receipts here</h4>
+                    <p class="text-slate-500 mb-4">or click to browse files</p>
+                    <div class="text-sm text-slate-400">Supports PDF, JPG, PNG files</div>
+                  </div>
+                  <input type="file" id="wasteFileInput" multiple accept=".pdf,.jpg,.jpeg,.png" style="display: none;" onchange="handleWasteFiles(this.files)">
+                </div>
+              </div>
+
+              <!-- Upload Progress -->
+              <div id="wasteUploadProgress" class="hidden mb-8">
+                <div class="bg-green-50 border border-green-200 rounded-xl p-6">
+                  <div class="flex items-center justify-between mb-3">
+                    <span class="text-sm font-medium text-green-700">
+                      <i class="fas fa-robot mr-2"></i>
+                      AI Analyzing Waste Data...
+                    </span>
+                    <span class="text-sm text-green-600" id="wasteProgressText">0%</span>
+                  </div>
+                  <div class="w-full bg-green-200 rounded-full h-3">
+                    <div class="bg-green-600 h-3 rounded-full transition-all duration-300" id="wasteProgressBar" style="width: 0%"></div>
+                  </div>
+                  <p class="text-xs text-green-600 mt-2">Extracting recycled materials, compost amounts, and waste data...</p>
+                </div>
+              </div>
+
+              <!-- AI Extracted Data -->
+              <div id="wasteExtractedData" class="hidden">
+                <h4 class="text-lg font-semibold text-slate-700 mb-4">
+                  <i class="fas fa-magic mr-2 text-green-500"></i>
+                  AI Extracted Data
+                </h4>
+                <div class="bg-green-50 border border-green-200 rounded-xl p-6">
+                  <p class="text-sm text-green-600 mb-4">
+                    <i class="fas fa-info-circle mr-1"></i>
+                    Review and adjust the extracted values if needed
+                  </p>
+                  <div class="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <label class="block text-sm font-medium text-slate-600 mb-2">Plastic Waste (kg)</label>
+                      <input type="number" step="0.1" class="form-input" id="extractedPlastic" oninput="updateFromWasteExtracted()">
+                    </div>
+                    <div>
+                      <label class="block text-sm font-medium text-slate-600 mb-2">Paper Recycled (kg)</label>
+                      <input type="number" step="0.1" class="form-input" id="extractedPaper" oninput="updateFromWasteExtracted()">
+                    </div>
+                    <div>
+                      <label class="block text-sm font-medium text-slate-600 mb-2">Glass/Metal (kg)</label>
+                      <input type="number" step="0.1" class="form-input" id="extractedGlass" oninput="updateFromWasteExtracted()">
+                    </div>
+                    <div>
+                      <label class="block text-sm font-medium text-slate-600 mb-2">Compost (kg)</label>
+                      <input type="number" step="0.1" class="form-input" id="extractedCompost" oninput="updateFromWasteExtracted()">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Real-Time Waste Feedback -->
+        <div class="sticky top-8" data-aos="fade-left">
+          <div class="bg-gradient-to-br from-green-50 to-emerald-50 rounded-3xl p-8 shadow-xl border border-green-200">
+            <!-- Results Card Header -->
+            <div class="text-center mb-8">
+              <h3 class="text-2xl font-bold text-slate-800 mb-2">Weekly Waste Impact</h3>
+              <p class="text-lg text-green-600 font-semibold" id="wasteResultText">
+                Your weekly waste footprint: <span id="wasteWeeklyEmissions">-8.0</span> kg CO₂
+              </p>
+            </div>
+            
+            <!-- Circular Progress Gauge -->
+            <div class="mb-8 flex justify-center">
+              <div class="relative w-48 h-48">
+                <svg class="w-48 h-48 transform -rotate-90" viewBox="0 0 100 100">
+                  <!-- Background circle -->
+                  <circle cx="50" cy="50" r="40" stroke="#d1fae5" stroke-width="8" fill="none"/>
+                  <!-- Progress circle -->
+                  <circle cx="50" cy="50" r="40" stroke="url(#wasteGradient)" stroke-width="8" fill="none"
+                          stroke-dasharray="251.2" stroke-dashoffset="201.0" 
+                          id="wasteProgressCircle" class="transition-all duration-500 ease-out"/>
+                  <!-- Gradient definition -->
+                  <defs>
+                    <linearGradient id="wasteGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" style="stop-color:#10b981"/>
+                      <stop offset="100%" style="stop-color:#059669"/>
+                    </linearGradient>
+                  </defs>
+                </svg>
+                <!-- Center content -->
+                <div class="absolute inset-0 flex items-center justify-center">
+                  <div class="text-center">
+                    <div class="text-3xl font-black text-green-600" id="wasteGaugeValue">-8.0</div>
+                    <div class="text-sm text-slate-600 font-medium">kg CO₂</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Waste Category Breakdown -->
+            <div class="space-y-4 mb-8">
+              <h4 class="text-lg font-semibold text-slate-700 text-center mb-4">Breakdown by Category</h4>
+              
+              <div class="flex items-center justify-between p-3 bg-white rounded-lg shadow-sm">
+                <div class="flex items-center">
+                  <span class="text-2xl mr-3">🥤</span>
+                  <span class="font-medium text-slate-700">Plastic Waste</span>
+                </div>
+                <span class="font-bold text-red-600" id="plasticTotalEmissions">+15.0 kg</span>
+              </div>
+              
+              <div class="flex items-center justify-between p-3 bg-white rounded-lg shadow-sm">
+                <div class="flex items-center">
+                  <span class="text-2xl mr-3">📄</span>
+                  <span class="font-medium text-slate-700">Paper Recycling</span>
+                </div>
+                <span class="font-bold text-green-600" id="paperTotalEmissions">-9.0 kg</span>
+              </div>
+              
+              <div class="flex items-center justify-between p-3 bg-white rounded-lg shadow-sm">
+                <div class="flex items-center">
+                  <span class="text-2xl mr-3">🍾</span>
+                  <span class="font-medium text-slate-700">Glass/Metal</span>
+                </div>
+                <span class="font-bold text-green-600" id="glassTotalEmissions">-6.0 kg</span>
+              </div>
+              
+              <div class="flex items-center justify-between p-3 bg-white rounded-lg shadow-sm">
+                <div class="flex items-center">
+                  <span class="text-2xl mr-3">🗑️</span>
+                  <span class="font-medium text-slate-700">Composting</span>
+                </div>
+                <span class="font-bold text-green-600" id="compostTotalEmissions">-8.0 kg</span>
+              </div>
+            </div>
+
+            <!-- Waste Hotspots -->
+            <div class="mb-8">
+              <h4 class="text-lg font-semibold text-slate-700 text-center mb-4">Waste Hotspots</h4>
+              <div class="bg-red-50 border border-red-200 rounded-xl p-4 mb-3">
+                <div class="flex items-center justify-between">
+                  <span class="text-sm font-medium text-red-700">🔥 Largest Impact</span>
+                  <span class="text-sm font-bold text-red-600" id="wasteTopContributor">Plastic Waste (+15.0 kg)</span>
+                </div>
+              </div>
+              <div class="bg-green-50 border border-green-200 rounded-xl p-4">
+                <div class="flex items-center justify-between">
+                  <span class="text-sm font-medium text-green-700">🌱 Best Saver</span>
+                  <span class="text-sm font-bold text-green-600" id="wasteBestSaver">Paper Recycling (-9.0 kg)</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Waste Stacked Bar Chart -->
+            <div class="mb-8">
+              <h4 class="text-lg font-semibold text-slate-700 text-center mb-4">Waste Impact Distribution</h4>
+              <div class="w-full bg-gray-200 rounded-full h-6 overflow-hidden">
+                <div class="h-full flex">
+                  <div class="bg-red-500 transition-all duration-500" id="plasticWasteBar" style="width: 50%"></div>
+                  <div class="bg-green-500 transition-all duration-500" id="recyclingBar" style="width: 50%"></div>
+                </div>
+              </div>
+              <div class="flex justify-between text-xs text-slate-500 mt-2">
+                <span>🥤 Waste Generated</span>
+                <span>♻️ Recycling Savings</span>
+              </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="mb-6">
+              <div class="flex justify-between text-sm text-slate-600 mb-2">
+                <span>Weekly Target: -10.0 kg CO₂</span>
+                <span id="wasteProgressPercentage">80%</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-3">
+                <div class="bg-gradient-to-r from-green-500 to-emerald-500 h-3 rounded-full transition-all duration-500" 
+                     id="wasteProgressBar" style="width: 80%"></div>
+              </div>
+            </div>
+
+            <!-- Quick Tips -->
+            <div class="bg-green-50 border border-green-200 rounded-xl p-4">
+              <h4 class="font-bold text-green-700 mb-2">♻️ Waste Tip</h4>
+              <p class="text-sm text-green-600" id="wasteTip">
+                Great job recycling! Reducing plastic use could further improve your waste footprint.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Food Calculator Tab -->
     <div id="calculator" class="tab-content">
       <div class="max-w-4xl mx-auto" data-aos="fade-up">
@@ -2522,6 +2908,279 @@
     updateShoppingCalculation();
   }
 
+  // Waste tracking functions
+  function updateWasteSlider(type, value) {
+    document.getElementById(type + 'Value').textContent = parseFloat(value).toFixed(1);
+    document.getElementById(type + 'Input').value = value;
+    updateWasteCalculation();
+  }
+
+  function updateWasteFromInput(type, value) {
+    if (value >= 0) {
+      document.getElementById(type + 'Slider').value = value;
+      document.getElementById(type + 'Value').textContent = parseFloat(value).toFixed(1);
+      updateWasteCalculation();
+    }
+  }
+
+  function togglePaperRecycling() {
+    const toggle = document.getElementById('paperToggle');
+    const input = document.getElementById('paperRecyclingInput');
+    
+    if (toggle.checked) {
+      input.classList.remove('hidden');
+    } else {
+      input.classList.add('hidden');
+    }
+    updateWasteCalculation();
+  }
+
+  function toggleGlassRecycling() {
+    const toggle = document.getElementById('glassToggle');
+    const input = document.getElementById('glassRecyclingInput');
+    
+    if (toggle.checked) {
+      input.classList.remove('hidden');
+    } else {
+      input.classList.add('hidden');
+    }
+    updateWasteCalculation();
+  }
+
+  function toggleComposting() {
+    const toggle = document.getElementById('compostToggle');
+    const input = document.getElementById('compostInput');
+    
+    if (toggle.checked) {
+      input.classList.remove('hidden');
+    } else {
+      input.classList.add('hidden');
+    }
+    updateWasteCalculation();
+  }
+
+  function updateWasteCalculation() {
+    // Get all waste input values
+    const plastic = parseFloat(document.getElementById('plasticSlider').value) || 0;
+    const paperRecycling = document.getElementById('paperToggle').checked;
+    const paper = paperRecycling ? (parseFloat(document.getElementById('paperSlider').value) || 0) : 0;
+    const glassRecycling = document.getElementById('glassToggle').checked;
+    const glass = glassRecycling ? (parseFloat(document.getElementById('glassSlider').value) || 0) : 0;
+    const composting = document.getElementById('compostToggle').checked;
+    const compost = composting ? (parseFloat(document.getElementById('compostSlider').value) || 0) : 0;
+
+    // Carbon emission/saving factors (kg CO2 per kg)
+    const wasteFactors = {
+      plastic: 6.0,    // kg CO2 per kg plastic waste (positive impact)
+      paper: -3.0,     // kg CO2 saved per kg paper recycled (negative impact)
+      glass: -4.0,     // kg CO2 saved per kg glass/metal recycled
+      compost: -2.0    // kg CO2 saved per kg composted (methane reduction)
+    };
+
+    // Calculate emissions (positive = bad, negative = good)
+    const plasticEmissions = plastic * wasteFactors.plastic;
+    const paperSavings = paper * wasteFactors.paper;
+    const glassSavings = glass * wasteFactors.glass;
+    const compostSavings = compost * wasteFactors.compost;
+
+    const totalEmissions = plasticEmissions + paperSavings + glassSavings + compostSavings;
+
+    // Update individual CO2 displays
+    animateValue('plasticCO2', plasticEmissions.toFixed(1) + ' kg CO₂');
+    if (paperRecycling) {
+      animateValue('paperCO2', paperSavings.toFixed(1) + ' kg CO₂');
+    }
+    if (glassRecycling) {
+      animateValue('glassCO2', glassSavings.toFixed(1) + ' kg CO₂');
+    }
+    if (composting) {
+      animateValue('compostCO2', compostSavings.toFixed(1) + ' kg CO₂');
+    }
+
+    // Update category totals
+    animateValue('plasticTotalEmissions', (plasticEmissions >= 0 ? '+' : '') + plasticEmissions.toFixed(1) + ' kg');
+    animateValue('paperTotalEmissions', (paperSavings >= 0 ? '+' : '') + paperSavings.toFixed(1) + ' kg');
+    animateValue('glassTotalEmissions', (glassSavings >= 0 ? '+' : '') + glassSavings.toFixed(1) + ' kg');
+    animateValue('compostTotalEmissions', (compostSavings >= 0 ? '+' : '') + compostSavings.toFixed(1) + ' kg');
+
+    // Update main displays
+    animateValue('wasteWeeklyEmissions', (totalEmissions >= 0 ? '+' : '') + totalEmissions.toFixed(1));
+    animateValue('wasteGaugeValue', (totalEmissions >= 0 ? '+' : '') + totalEmissions.toFixed(1));
+
+    // Update progress gauge
+    updateWasteProgressGauge(totalEmissions);
+    
+    // Update progress bar (negative is better for waste)
+    const weeklyTarget = -10.0; // Target is negative (savings)
+    const percentage = totalEmissions <= weeklyTarget ? 100 : Math.max(0, (Math.abs(totalEmissions) / Math.abs(weeklyTarget)) * 100);
+    document.getElementById('wasteProgressPercentage').textContent = Math.min(percentage, 100).toFixed(0) + '%';
+    document.getElementById('wasteProgressBar').style.width = Math.min(percentage, 100) + '%';
+
+    // Update stacked bar chart
+    updateWasteStackedBar(plasticEmissions, Math.abs(paperSavings + glassSavings + compostSavings));
+
+    // Update hotspots
+    updateWasteHotspots(plasticEmissions, paperSavings, glassSavings, compostSavings);
+
+    // Update tip
+    updateWasteTip(plastic, paperRecycling, glassRecycling, composting, totalEmissions);
+  }
+
+  function updateWasteProgressGauge(value) {
+    // For waste, negative values are good (savings), positive are bad
+    const maxValue = 20; // Max expected weekly waste emissions
+    const minValue = -20; // Max expected weekly savings
+    
+    let percentage;
+    if (value >= 0) {
+      // Positive emissions (bad)
+      percentage = Math.min(value / maxValue, 1);
+    } else {
+      // Negative emissions (good savings)
+      percentage = Math.min(Math.abs(value) / Math.abs(minValue), 1);
+    }
+    
+    const circumference = 251.2; // 2 * π * 40
+    const offset = circumference - (percentage * circumference);
+    
+    const circle = document.getElementById('wasteProgressCircle');
+    if (circle) {
+      circle.style.strokeDashoffset = offset;
+      // Change color based on positive/negative
+      if (value >= 0) {
+        circle.style.stroke = '#dc2626'; // Red for positive emissions
+      } else {
+        circle.style.stroke = 'url(#wasteGradient)'; // Green for savings
+      }
+    }
+  }
+
+  function updateWasteStackedBar(plastic, recycling) {
+    const total = plastic + recycling || 1;
+    const plasticPercent = (plastic / total) * 100;
+    const recyclingPercent = (recycling / total) * 100;
+
+    document.getElementById('plasticWasteBar').style.width = plasticPercent + '%';
+    document.getElementById('recyclingBar').style.width = recyclingPercent + '%';
+  }
+
+  function updateWasteHotspots(plastic, paper, glass, compost) {
+    // Find largest positive impact (waste generation)
+    const topContributor = plastic > 0 ? `Plastic Waste (+${plastic.toFixed(1)} kg)` : 'No waste generated';
+    
+    // Find best saver (most negative impact)
+    const savers = [
+      { name: 'Paper Recycling', value: paper },
+      { name: 'Glass/Metal', value: glass },
+      { name: 'Composting', value: compost }
+    ];
+    
+    savers.sort((a, b) => a.value - b.value); // Sort by most negative first
+    const bestSaver = savers[0].value < 0 ? 
+      `${savers[0].name} (${savers[0].value.toFixed(1)} kg)` : 
+      'No recycling activities';
+    
+    document.getElementById('wasteTopContributor').textContent = topContributor;
+    document.getElementById('wasteBestSaver').textContent = bestSaver;
+  }
+
+  function updateWasteTip(plastic, paperRecycling, glassRecycling, composting, totalEmissions) {
+    const tipElement = document.getElementById('wasteTip');
+    if (!tipElement) return;
+    
+    if (plastic > 3 && !paperRecycling && !glassRecycling) {
+      tipElement.textContent = 'Start recycling paper and glass to offset your plastic waste impact!';
+    } else if (plastic > 5) {
+      tipElement.textContent = 'Consider reducing plastic consumption - bring reusable bags and containers!';
+    } else if (!composting && totalEmissions > -5) {
+      tipElement.textContent = 'Starting a compost bin could save 2kg CO₂ per kg of organic waste!';
+    } else if (totalEmissions < -15) {
+      tipElement.textContent = 'Outstanding! Your waste habits are making a significant positive impact.';
+    } else if (paperRecycling && glassRecycling && composting) {
+      tipElement.textContent = 'Excellent recycling habits! Consider reducing overall consumption for even better impact.';
+    } else {
+      tipElement.textContent = 'Great job recycling! Reducing plastic use could further improve your waste footprint.';
+    }
+  }
+
+  function handleWasteFiles(files) {
+    const progressDiv = document.getElementById('wasteUploadProgress');
+    const extractedDiv = document.getElementById('wasteExtractedData');
+    const progressBar = document.getElementById('wasteProgressBar');
+    const progressText = document.getElementById('wasteProgressText');
+    
+    if (files.length === 0) return;
+    
+    // Show progress
+    progressDiv.classList.remove('hidden');
+    
+    // Simulate AI processing
+    let progress = 0;
+    const interval = setInterval(() => {
+      progress += Math.random() * 10;
+      if (progress >= 100) {
+        progress = 100;
+        clearInterval(interval);
+        
+        // Show extracted data after processing
+        setTimeout(() => {
+          progressDiv.classList.add('hidden');
+          extractedDiv.classList.remove('hidden');
+          
+          // Simulate extracted values
+          document.getElementById('extractedPlastic').value = 1.8;
+          document.getElementById('extractedPaper').value = 4.2;
+          document.getElementById('extractedGlass').value = 2.1;
+          document.getElementById('extractedCompost').value = 3.5;
+          
+          // Update calculations with extracted data
+          updateFromWasteExtracted();
+        }, 500);
+      }
+      
+      progressBar.style.width = progress + '%';
+      progressText.textContent = Math.round(progress) + '%';
+    }, 300);
+  }
+
+  function updateFromWasteExtracted() {
+    const plastic = parseFloat(document.getElementById('extractedPlastic').value) || 0;
+    const paper = parseFloat(document.getElementById('extractedPaper').value) || 0;
+    const glass = parseFloat(document.getElementById('extractedGlass').value) || 0;
+    const compost = parseFloat(document.getElementById('extractedCompost').value) || 0;
+    
+    // Update manual inputs
+    document.getElementById('plasticSlider').value = plastic;
+    document.getElementById('plasticInput').value = plastic;
+    document.getElementById('plasticValue').textContent = plastic.toFixed(1);
+    
+    if (paper > 0) {
+      document.getElementById('paperToggle').checked = true;
+      document.getElementById('paperRecyclingInput').classList.remove('hidden');
+      document.getElementById('paperSlider').value = paper;
+      document.getElementById('paperInput').value = paper;
+      document.getElementById('paperValue').textContent = paper.toFixed(1);
+    }
+    
+    if (glass > 0) {
+      document.getElementById('glassToggle').checked = true;
+      document.getElementById('glassRecyclingInput').classList.remove('hidden');
+      document.getElementById('glassSlider').value = glass;
+      document.getElementById('glassInput').value = glass;
+      document.getElementById('glassValue').textContent = glass.toFixed(1);
+    }
+    
+    if (compost > 0) {
+      document.getElementById('compostToggle').checked = true;
+      document.getElementById('compostInput').classList.remove('hidden');
+      document.getElementById('compostSlider').value = compost;
+      document.getElementById('compostInputField').value = compost;
+      document.getElementById('compostValue').textContent = compost.toFixed(1);
+    }
+    
+    updateWasteCalculation();
+  }
+
   // Update slider values
   function updateValue(type, value) {
     document.getElementById(type + 'Value').textContent = value + ' km';
@@ -2666,6 +3325,7 @@
   updateTransportCalculation();
   updateEnergyCalculation();
   updateShoppingCalculation();
+  updateWasteCalculation();
 </script>
 
 {% endblock %}
