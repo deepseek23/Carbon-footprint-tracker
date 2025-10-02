@@ -266,7 +266,8 @@ class CarbonTracker {
     total += dayData.waste.recycling * this.emissionFactors.waste.recycling;
     total += dayData.waste.compost * this.emissionFactors.waste.compost;
 
-    dayData.emissions.waste = Math.max(0, total); // Don't go negative
+    // Allow negative emissions here to reflect reductions from recycling/compost
+    dayData.emissions.waste = total;
     return dayData.emissions.waste;
   }
 
@@ -310,6 +311,23 @@ class CarbonTracker {
     
     // Update smart tip
     this.updateSmartTip(emissions);
+
+    // Ensure the top header for the current section reflects latest emissions
+    const activeTab = document.querySelector('.tab-content.active');
+    if (activeTab) {
+      const section = activeTab.id; // e.g., 'food', 'transportation', etc.
+      if (typeof updateCurrentSectionDisplay === 'function') {
+        // Refresh the current section header (icon, title, and emission value)
+        updateCurrentSectionDisplay(section);
+      } else {
+        // Fallback: at least update the number if the helper is unavailable
+        const sectionEmissionsEl = document.getElementById('currentSectionEmissions');
+        const value = emissions[section];
+        if (sectionEmissionsEl && typeof value === 'number') {
+          sectionEmissionsEl.textContent = value.toFixed(1);
+        }
+      }
+    }
   }
 
   updateElement(id, value) {
@@ -321,7 +339,7 @@ class CarbonTracker {
 
   updateGauge(value) {
     const maxValue = this.dailyTargets.total * 1.5; // 150% of target
-    const percentage = Math.min(value / maxValue, 1);
+    const percentage = Math.max(0, Math.min(value / maxValue, 1));
     const circumference = 502.4; // 2 * π * 80
     const offset = circumference - (percentage * circumference);
     
@@ -332,7 +350,7 @@ class CarbonTracker {
   }
 
   updateProgressBar(value) {
-    const percentage = Math.min((value / this.dailyTargets.total) * 100, 100);
+    const percentage = Math.max(0, Math.min((value / this.dailyTargets.total) * 100, 100));
     const progressBar = document.getElementById('targetProgressBar');
     const percentageText = document.getElementById('targetPercentage');
     const statusText = document.getElementById('targetStatus');
