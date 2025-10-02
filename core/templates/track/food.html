@@ -1,0 +1,236 @@
+<div class="section-card" data-aos="fade-right">
+  <div class="mb-8">
+    <h3 class="text-3xl font-bold text-slate-800 mb-3 flex items-center">
+      <i class="fas fa-utensils text-orange-500 mr-3"></i>
+      Food & Diet
+    </h3>
+    <p class="text-lg text-slate-600">Track your meals and dietary choices to understand your food carbon footprint.</p>
+  </div>
+
+  <!-- Meal Tracker -->
+  <div class="mb-8">
+    <h4 class="text-xl font-semibold text-slate-700 mb-4 flex items-center">
+      <i class="fas fa-calendar-day text-green-500 mr-2"></i>
+      Today's Meals
+    </h4>
+    <div class="space-y-4">
+      <div class="bg-yellow-50 rounded-xl p-4">
+        <label class="block text-sm font-medium text-slate-600 mb-2">Breakfast</label>
+        <input type="text" placeholder="What did you have for breakfast?" 
+               class="form-input" id="breakfastInput" oninput="updateFoodCalculation()">
+      </div>
+      <div class="bg-orange-50 rounded-xl p-4">
+        <label class="block text-sm font-medium text-slate-600 mb-2">Lunch</label>
+        <input type="text" placeholder="What did you have for lunch?" 
+               class="form-input" id="lunchInput" oninput="updateFoodCalculation()">
+      </div>
+      <div class="bg-red-50 rounded-xl p-4">
+        <label class="block text-sm font-medium text-slate-600 mb-2">Dinner</label>
+        <input type="text" placeholder="What did you have for dinner?" 
+               class="form-input" id="dinnerInput" oninput="updateFoodCalculation()">
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Dietary Assessment -->
+  <div class="mb-8">
+    <h4 class="text-xl font-semibold text-slate-700 mb-4 flex items-center">
+      <i class="fas fa-chart-pie text-purple-500 mr-2"></i>
+      Quick Assessment
+    </h4>
+    <div class="grid md:grid-cols-2 gap-6">
+      <div class="bg-red-50 rounded-xl p-4">
+        <label class="block text-sm font-medium text-slate-600 mb-3">Meat meals today</label>
+        <input type="range" min="0" max="5" value="0" class="slider w-full mb-2" 
+               id="meatMealsSlider" oninput="updateMeatMeals(this.value)">
+        <div class="flex justify-between items-center">
+          <span class="text-sm text-slate-500">0</span>
+          <div class="bg-white rounded-lg px-3 py-1 shadow-sm">
+            <span class="text-lg font-bold text-red-600" id="meatMealsValue">0</span>
+            <span class="text-sm text-slate-500 ml-1">meals</span>
+          </div>
+          <span class="text-sm text-slate-500">5</span>
+        </div>
+      </div>
+
+      <div class="bg-blue-50 rounded-xl p-4">
+        <label class="block text-sm font-medium text-slate-600 mb-3">Dairy servings today</label>
+        <input type="range" min="0" max="8" value="0" class="slider w-full mb-2" 
+               id="dairyServingsSlider" oninput="updateDairyServings(this.value)">
+        <div class="flex justify-between items-center">
+          <span class="text-sm text-slate-500">0</span>
+          <div class="bg-white rounded-lg px-3 py-1 shadow-sm">
+            <span class="text-lg font-bold text-blue-600" id="dairyServingsValue">0</span>
+            <span class="text-sm text-slate-500 ml-1">servings</span>
+          </div>
+          <span class="text-sm text-slate-500">8</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Food Preferences -->
+  <div class="mb-8">
+    <h4 class="text-xl font-semibold text-slate-700 mb-4 flex items-center">
+      <i class="fas fa-leaf text-green-500 mr-2"></i>
+      Food Preferences
+    </h4>
+    <div class="bg-green-50 rounded-xl p-4">
+      <div class="flex items-center justify-between">
+        <div>
+          <label class="font-medium text-slate-700">Mostly Local/Seasonal Produce</label>
+          <p class="text-sm text-slate-500">Local food has lower transport emissions</p>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" id="localProduceToggle" checked onchange="updateFoodCalculation()">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI Food Analysis -->
+  <div class="mb-6">
+    <h4 class="text-xl font-semibold text-slate-700 mb-4 flex items-center">
+      <i class="fas fa-robot text-purple-500 mr-2"></i>
+      AI Food Analysis
+    </h4>
+    <div class="border-2 border-dashed border-purple-300 rounded-xl p-6 text-center bg-purple-50 hover:bg-purple-100 transition-colors cursor-pointer"
+         onclick="document.getElementById('foodFileInput').click()">
+      <i class="fas fa-camera text-4xl text-purple-500 mb-3"></i>
+      <h4 class="text-lg font-semibold text-slate-700 mb-2">Upload Food Photos or Receipts</h4>
+      <p class="text-slate-500 mb-4">AI will analyze your meals and calculate emissions</p>
+      <div class="text-sm text-slate-400">Supports JPG, PNG files</div>
+      <input type="file" id="foodFileInput" class="hidden" multiple 
+             accept=".jpg,.jpeg,.png" onchange="handleFoodFiles(this.files)">
+    </div>
+    
+    <!-- Upload Progress -->
+    <div id="foodUploadProgress" class="hidden mt-4">
+      <div class="bg-white rounded-lg p-4">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-sm font-medium text-slate-700">Analyzing food...</span>
+          <span class="text-sm text-slate-500" id="foodProgressText">0%</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="foodProgressBar" style="width: 0%"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI Results -->
+    <div id="foodAIResults" class="hidden mt-4">
+      <div class="bg-white rounded-lg p-4 border border-green-200">
+        <h5 class="font-semibold text-green-700 mb-3">
+          <i class="fas fa-check-circle mr-2"></i>Food Analysis Complete
+        </h5>
+        <div class="space-y-2" id="foodAnalysisResults">
+          <!-- AI results will be populated here -->
+        </div>
+        <button onclick="applyFoodAnalysis()" class="btn-primary mt-3">
+          Apply to Today's Meals
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function updateMeatMeals(value) {
+  document.getElementById('meatMealsValue').textContent = value;
+  const dayData = carbonTracker.getCurrentDateData();
+  dayData.food.meatMeals = parseInt(value);
+  updateFoodCalculation();
+}
+
+function updateDairyServings(value) {
+  document.getElementById('dairyServingsValue').textContent = value;
+  const dayData = carbonTracker.getCurrentDateData();
+  dayData.food.dairyServings = parseInt(value);
+  updateFoodCalculation();
+}
+
+function updateFoodCalculation() {
+  const dayData = carbonTracker.getCurrentDateData();
+  
+  // Update meal descriptions
+  dayData.food.meals.breakfast = document.getElementById('breakfastInput')?.value || '';
+  dayData.food.meals.lunch = document.getElementById('lunchInput')?.value || '';
+  dayData.food.meals.dinner = document.getElementById('dinnerInput')?.value || '';
+  
+  // Update local produce preference
+  dayData.food.localProduce = document.getElementById('localProduceToggle')?.checked || true;
+  
+  // Recalculate emissions
+  carbonTracker.calculateAllEmissions();
+}
+
+function handleFoodFiles(files) {
+  if (files.length === 0) return;
+  
+  const progressDiv = document.getElementById('foodUploadProgress');
+  const resultsDiv = document.getElementById('foodAIResults');
+  const progressBar = document.getElementById('foodProgressBar');
+  const progressText = document.getElementById('foodProgressText');
+  
+  // Show progress
+  progressDiv.classList.remove('hidden');
+  resultsDiv.classList.add('hidden');
+  
+  // Simulate AI processing
+  let progress = 0;
+  const interval = setInterval(() => {
+    progress += Math.random() * 12;
+    if (progress >= 100) {
+      progress = 100;
+      clearInterval(interval);
+      
+      // Show AI results
+      setTimeout(() => {
+        progressDiv.classList.add('hidden');
+        resultsDiv.classList.remove('hidden');
+        
+        // Simulate AI analysis results
+        const results = [
+          { meal: 'Breakfast', food: 'Scrambled eggs with toast', emissions: 1.2 },
+          { meal: 'Lunch', food: 'Chicken salad sandwich', emissions: 2.8 },
+          { meal: 'Dinner', food: 'Beef stir-fry with rice', emissions: 6.5 }
+        ];
+        
+        const resultsContainer = document.getElementById('foodAnalysisResults');
+        resultsContainer.innerHTML = results.map(result => 
+          `<div class="flex justify-between items-center p-2 bg-gray-50 rounded">
+            <div>
+              <span class="font-medium">${result.meal}:</span> ${result.food}
+            </div>
+            <span class="text-sm font-bold text-orange-600">${result.emissions} kg CO₂</span>
+          </div>`
+        ).join('');
+      }, 500);
+    }
+    
+    progressBar.style.width = progress + '%';
+    progressText.textContent = Math.round(progress) + '%';
+  }, 150);
+}
+
+function applyFoodAnalysis() {
+  // Apply AI analysis to form fields
+  document.getElementById('breakfastInput').value = 'Scrambled eggs with toast';
+  document.getElementById('lunchInput').value = 'Chicken salad sandwich';
+  document.getElementById('dinnerInput').value = 'Beef stir-fry with rice';
+  
+  // Update sliders based on analysis
+  document.getElementById('meatMealsSlider').value = 2;
+  document.getElementById('meatMealsValue').textContent = 2;
+  document.getElementById('dairyServingsSlider').value = 1;
+  document.getElementById('dairyServingsValue').textContent = 1;
+  
+  updateFoodCalculation();
+  
+  // Hide results
+  document.getElementById('foodAIResults').classList.add('hidden');
+  
+  alert('AI analysis applied to your meals!');
+}
+</script>

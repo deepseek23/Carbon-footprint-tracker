@@ -1,0 +1,41 @@
+<div class="section-card" data-aos="fade-right">
+  <div class="mb-8">
+    <h3 class="text-3xl font-bold text-slate-800 mb-3 flex items-center">
+      <i class="fas fa-globe text-indigo-500 mr-3"></i>
+      Other Activities
+    </h3>
+    <p class="text-lg text-slate-600">Track other activities that contribute to your carbon footprint.</p>
+  </div>
+
+  <!-- Custom Activities -->
+  <div class="mb-8">
+    <h4 class="text-xl font-semibold text-slate-700 mb-4">Custom Activities</h4>
+    <div class="space-y-4">
+      <div class="bg-indigo-50 rounded-xl p-4">
+        <label class="block text-sm font-medium text-slate-600 mb-2">Activity Description</label>
+        <input type="text" placeholder="e.g., Swimming, Gym, Events" 
+               class="form-input mb-3" id="customActivity">
+        <label class="block text-sm font-medium text-slate-600 mb-2">Estimated Emissions (kg CO₂)</label>
+        <input type="number" min="0" step="0.1" placeholder="0.0" 
+               class="form-input" id="customEmissions" oninput="updateOtherCalculation()">
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function updateOtherCalculation() {
+  const dayData = carbonTracker.getCurrentDateData();
+  
+  const activity = document.getElementById('customActivity')?.value || '';
+  const emissions = parseFloat(document.getElementById('customEmissions')?.value) || 0;
+  
+  if (activity && emissions > 0) {
+    dayData.other.activities = [{ name: activity, emissions: emissions }];
+  } else {
+    dayData.other.activities = [];
+  }
+  
+  carbonTracker.calculateAllEmissions();
+}
+</script>

@@ -1,0 +1,43 @@
+<div class="section-card" data-aos="fade-right">
+  <div class="mb-8">
+    <h3 class="text-3xl font-bold text-slate-800 mb-3 flex items-center">
+      <i class="fas fa-recycle text-purple-500 mr-3"></i>
+      Waste & Recycling
+    </h3>
+    <p class="text-lg text-slate-600">Track your waste generation and recycling habits.</p>
+  </div>
+
+  <!-- Waste Categories -->
+  <div class="mb-8">
+    <h4 class="text-xl font-semibold text-slate-700 mb-4">Today's Waste</h4>
+    <div class="space-y-4">
+      <div class="bg-red-50 rounded-xl p-4">
+        <label class="block text-sm font-medium text-slate-600 mb-2">General Waste (kg)</label>
+        <input type="number" min="0" step="0.1" placeholder="0.0" 
+               class="form-input" id="generalWaste" oninput="updateWasteCalculation()">
+      </div>
+      <div class="bg-green-50 rounded-xl p-4">
+        <label class="block text-sm font-medium text-slate-600 mb-2">Recycling (kg)</label>
+        <input type="number" min="0" step="0.1" placeholder="0.0" 
+               class="form-input" id="recyclingWaste" oninput="updateWasteCalculation()">
+      </div>
+      <div class="bg-yellow-50 rounded-xl p-4">
+        <label class="block text-sm font-medium text-slate-600 mb-2">Compost (kg)</label>
+        <input type="number" min="0" step="0.1" placeholder="0.0" 
+               class="form-input" id="compostWaste" oninput="updateWasteCalculation()">
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function updateWasteCalculation() {
+  const dayData = carbonTracker.getCurrentDateData();
+  
+  dayData.waste.general = parseFloat(document.getElementById('generalWaste')?.value) || 0;
+  dayData.waste.recycling = parseFloat(document.getElementById('recyclingWaste')?.value) || 0;
+  dayData.waste.compost = parseFloat(document.getElementById('compostWaste')?.value) || 0;
+  
+  carbonTracker.calculateAllEmissions();
+}
+</script>

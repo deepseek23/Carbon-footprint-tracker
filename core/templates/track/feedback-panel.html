@@ -1,0 +1,127 @@
+<div class="feedback-card" data-aos="fade-left">
+  <!-- Real-time Feedback Header -->
+  <div class="text-center mb-6">
+    <h3 class="text-2xl font-bold text-slate-800 mb-2">Today's Impact</h3>
+    <p class="text-lg font-semibold" id="currentSectionText">
+      Transportation: <span id="currentSectionEmissions" class="text-blue-600">0.0</span> kg CO₂
+    </p>
+  </div>
+
+  <!-- Circular Gauge -->
+  <div class="gauge-container mb-6">
+    <svg class="gauge-svg" viewBox="0 0 200 200">
+      <defs>
+        <linearGradient id="gaugeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" style="stop-color:#3b82f6"/>
+          <stop offset="100%" style="stop-color:#10b981"/>
+        </linearGradient>
+      </defs>
+      <circle cx="100" cy="100" r="80" class="gauge-bg"/>
+      <circle cx="100" cy="100" r="80" class="gauge-progress" 
+              stroke-dasharray="502.4" stroke-dashoffset="376.8" id="mainGaugeProgress"/>
+    </svg>
+    <div class="gauge-text">
+      <div class="text-3xl font-black text-slate-800" id="totalEmissions">0.0</div>
+      <div class="text-sm text-slate-600 font-medium">kg CO₂</div>
+      <div class="text-xs text-slate-500 mt-1">Daily Total</div>
+    </div>
+  </div>
+
+  <!-- Section Breakdown -->
+  <div class="space-y-3 mb-6">
+    <h4 class="text-lg font-semibold text-slate-700 text-center mb-4">Breakdown by Category</h4>
+    
+    <div class="flex items-center justify-between p-3 bg-white rounded-lg shadow-sm">
+      <div class="flex items-center">
+        <i class="fas fa-car text-blue-500 mr-3"></i>
+        <span class="font-medium text-slate-700">Transport</span>
+      </div>
+      <span class="font-bold text-blue-600" id="transportEmissions">0.0 kg</span>
+    </div>
+    
+    <div class="flex items-center justify-between p-3 bg-white rounded-lg shadow-sm">
+      <div class="flex items-center">
+        <i class="fas fa-utensils text-orange-500 mr-3"></i>
+        <span class="font-medium text-slate-700">Food</span>
+      </div>
+      <span class="font-bold text-orange-600" id="foodEmissions">0.0 kg</span>
+    </div>
+    
+    <div class="flex items-center justify-between p-3 bg-white rounded-lg shadow-sm">
+      <div class="flex items-center">
+        <i class="fas fa-plug text-yellow-500 mr-3"></i>
+        <span class="font-medium text-slate-700">Energy</span>
+      </div>
+      <span class="font-bold text-yellow-600" id="energyEmissions">0.0 kg</span>
+    </div>
+    
+    <div class="flex items-center justify-between p-3 bg-white rounded-lg shadow-sm">
+      <div class="flex items-center">
+        <i class="fas fa-shopping-cart text-green-500 mr-3"></i>
+        <span class="font-medium text-slate-700">Shopping</span>
+      </div>
+      <span class="font-bold text-green-600" id="shoppingEmissions">0.0 kg</span>
+    </div>
+    
+    <div class="flex items-center justify-between p-3 bg-white rounded-lg shadow-sm">
+      <div class="flex items-center">
+        <i class="fas fa-recycle text-purple-500 mr-3"></i>
+        <span class="font-medium text-slate-700">Waste</span>
+      </div>
+      <span class="font-bold text-purple-600" id="wasteEmissions">0.0 kg</span>
+    </div>
+    
+    <div class="flex items-center justify-between p-3 bg-white rounded-lg shadow-sm">
+      <div class="flex items-center">
+        <i class="fas fa-globe text-indigo-500 mr-3"></i>
+        <span class="font-medium text-slate-700">Other</span>
+      </div>
+      <span class="font-bold text-indigo-600" id="otherEmissions">0.0 kg</span>
+    </div>
+  </div>
+
+  <!-- Progress Towards Target -->
+  <div class="mb-6">
+    <div class="flex justify-between text-sm text-slate-600 mb-2">
+      <span>Daily Target: <span id="dailyTarget">15.0</span> kg CO₂</span>
+      <span id="targetPercentage">0%</span>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="targetProgressBar" style="width: 0%"></div>
+    </div>
+    <div class="text-center mt-2">
+      <span class="text-sm font-medium" id="targetStatus">Within target</span>
+    </div>
+  </div>
+
+  <!-- Quick Insights -->
+  <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-6">
+    <h4 class="font-bold text-blue-700 mb-2 flex items-center">
+      <i class="fas fa-lightbulb mr-2"></i>
+      Smart Insight
+    </h4>
+    <p class="text-sm text-blue-600" id="smartTip">
+      Start tracking your activities to get personalized insights!
+    </p>
+  </div>
+
+  <!-- Weekly Trend Chart -->
+  <div class="mb-6">
+    <h4 class="text-lg font-semibold text-slate-700 mb-3">7-Day Trend</h4>
+    <div class="bg-white rounded-lg p-4">
+      <canvas id="weeklyTrendChart" width="300" height="150"></canvas>
+    </div>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="space-y-3">
+    <button onclick="saveCurrentData()" class="btn-primary w-full">
+      <i class="fas fa-save mr-2"></i>
+      Save Today's Data
+    </button>
+    <button onclick="viewHistory()" class="btn-secondary w-full">
+      <i class="fas fa-history mr-2"></i>
+      View History
+    </button>
+  </div>
+</div>

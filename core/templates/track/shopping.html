@@ -1,0 +1,49 @@
+<div class="section-card" data-aos="fade-right">
+  <div class="mb-8">
+    <h3 class="text-3xl font-bold text-slate-800 mb-3 flex items-center">
+      <i class="fas fa-shopping-cart text-green-500 mr-3"></i>
+      Shopping & Consumption
+    </h3>
+    <p class="text-lg text-slate-600">Track your purchases and consumption patterns.</p>
+  </div>
+
+  <!-- Quick Shopping Assessment -->
+  <div class="mb-8">
+    <h4 class="text-xl font-semibold text-slate-700 mb-4">Today's Purchases</h4>
+    <div class="space-y-4">
+      <div class="bg-green-50 rounded-xl p-4">
+        <label class="block text-sm font-medium text-slate-600 mb-2">Clothing Items</label>
+        <input type="number" min="0" placeholder="Number of items" 
+               class="form-input" id="clothingItems" oninput="updateShoppingCalculation()">
+      </div>
+      <div class="bg-blue-50 rounded-xl p-4">
+        <label class="block text-sm font-medium text-slate-600 mb-2">Electronics</label>
+        <input type="number" min="0" placeholder="Number of items" 
+               class="form-input" id="electronicsItems" oninput="updateShoppingCalculation()">
+      </div>
+      <div class="bg-purple-50 rounded-xl p-4">
+        <label class="block text-sm font-medium text-slate-600 mb-2">Other Items</label>
+        <input type="number" min="0" placeholder="Number of items" 
+               class="form-input" id="otherItems" oninput="updateShoppingCalculation()">
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function updateShoppingCalculation() {
+  const dayData = carbonTracker.getCurrentDateData();
+  
+  const clothing = parseInt(document.getElementById('clothingItems')?.value) || 0;
+  const electronics = parseInt(document.getElementById('electronicsItems')?.value) || 0;
+  const other = parseInt(document.getElementById('otherItems')?.value) || 0;
+  
+  dayData.shopping.items = [
+    { category: 'clothing', quantity: clothing },
+    { category: 'electronics', quantity: electronics },
+    { category: 'general', quantity: other }
+  ];
+  
+  carbonTracker.calculateAllEmissions();
+}
+</script>

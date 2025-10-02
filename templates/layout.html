@@ -156,18 +156,17 @@
             <i class="fas fa-leaf text-white text-lg"></i>
           </div>
           <h1 class="text-2xl font-bold bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">
-            Carbon Tracker
           </h1>
         </a>
 
         <!-- Desktop Navigation -->
         <nav class="hidden lg:flex items-center space-x-8">
           <a href="{% url 'landing' %}" class="nav-link relative">Home</a>
+          <a href="{% url 'track' %}" class="nav-link relative">Track</a>
           <a href="#features" class="nav-link relative">Features</a>
           <a href="{% url 'dashboard' %}" class="nav-link relative">Dashboard</a>
           <a href="#" class="nav-link relative">Leaderboard</a>
           <a href="#" class="nav-link relative">Challenges</a>
-          <a href="#" class="nav-link relative">Contact</a>
         </nav>
 
         <!-- Desktop CTA & Auth -->
@@ -224,6 +223,9 @@
             <a href="{% url 'landing' %}" class="mobile-nav-link block py-3 px-4 text-gray-700 hover:bg-green-50 hover:text-green-600 rounded-lg transition-all duration-300">
               <i class="fas fa-home w-5 mr-3"></i>Home
             </a>
+            <a href="{% url 'track' %}" class="mobile-nav-link block py-3 px-4 text-gray-700 hover:bg-green-50 hover:text-green-600 rounded-lg transition-all duration-300">
+              <i class="fas fa-chart-bar w-5 mr-3"></i>Track
+            </a>
             <a href="#features" class="mobile-nav-link block py-3 px-4 text-gray-700 hover:bg-green-50 hover:text-green-600 rounded-lg transition-all duration-300">
               <i class="fas fa-star w-5 mr-3"></i>Features
             </a>
@@ -235,9 +237,6 @@
             </a>
             <a href="#" class="mobile-nav-link block py-3 px-4 text-gray-700 hover:bg-green-50 hover:text-green-600 rounded-lg transition-all duration-300">
               <i class="fas fa-gamepad w-5 mr-3"></i>Challenges
-            </a>
-            <a href="#" class="mobile-nav-link block py-3 px-4 text-gray-700 hover:bg-green-50 hover:text-green-600 rounded-lg transition-all duration-300">
-              <i class="fas fa-envelope w-5 mr-3"></i>Contact
             </a>
           </nav>
 
