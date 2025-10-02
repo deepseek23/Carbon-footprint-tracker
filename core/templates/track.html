@@ -1244,6 +1244,410 @@
       </div>
     </div>
 
+    <!-- Shopping & Consumption Tab -->
+    <div id="shopping" class="tab-content">
+      <div class="grid lg:grid-cols-2 gap-12">
+        <!-- Input Section -->
+        <div class="space-y-8" data-aos="fade-right">
+          <div class="bg-white rounded-3xl p-8 shadow-lg border border-purple-100">
+            <!-- Section Header -->
+            <div class="mb-8">
+              <h3 class="text-3xl font-bold text-slate-800 mb-3">
+                <i class="fas fa-shopping-cart text-purple-500 mr-3"></i>
+                Shopping & Consumption
+              </h3>
+              <p class="text-lg text-slate-600">Track your purchases and understand how your consumption affects your carbon footprint.</p>
+            </div>
+            
+            <!-- Manual Entry Panel -->
+            <div class="mb-10">
+              <h4 class="text-xl font-semibold text-slate-700 mb-6 flex items-center">
+                <i class="fas fa-keyboard text-green-500 mr-2"></i>
+                Manual Entry
+              </h4>
+
+              <!-- Clothing & Fashion -->
+              <div class="mb-10">
+                <h5 class="text-lg font-semibold text-slate-700 mb-6 flex items-center">
+                  <span class="text-2xl mr-2">👕</span>
+                  Clothing & Fashion
+                </h5>
+                <div class="bg-pink-50 rounded-xl p-6">
+                  <div class="mb-6">
+                    <div class="flex justify-between items-center mb-3">
+                      <label class="text-sm font-medium text-slate-600">Clothing items bought per month</label>
+                      <div class="flex items-center gap-2">
+                        <span class="text-2xl font-bold text-pink-600" id="clothingValue">3</span>
+                        <span class="text-sm text-slate-500">items</span>
+                        <span class="text-sm font-semibold text-pink-600" id="clothingCO2">24.0 kg CO₂</span>
+                      </div>
+                    </div>
+                    <input type="range" min="0" max="20" value="3" class="slider w-full mb-3" id="clothingSlider" 
+                           oninput="updateShoppingSlider('clothing', this.value)">
+                    <div class="flex justify-between text-xs text-slate-500">
+                      <span>0 items</span>
+                      <span>20 items</span>
+                    </div>
+                  </div>
+                  
+                  <div class="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <label class="block text-sm font-medium text-slate-600 mb-2">Manual Input</label>
+                      <input type="number" min="0" max="20" value="3" class="form-input" id="clothingInput" 
+                             oninput="updateShoppingFromInput('clothing', this.value)">
+                    </div>
+                    <div>
+                      <label class="block text-sm font-medium text-slate-600 mb-2">Type</label>
+                      <select class="form-select" id="clothingType" onchange="updateShoppingCalculation()">
+                        <option value="fast">Fast Fashion</option>
+                        <option value="sustainable">Sustainable</option>
+                        <option value="secondhand">Second-Hand</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Electronics & Gadgets -->
+              <div class="mb-10">
+                <h5 class="text-lg font-semibold text-slate-700 mb-6 flex items-center">
+                  <span class="text-2xl mr-2">📱</span>
+                  Electronics & Gadgets
+                </h5>
+                <div class="bg-blue-50 rounded-xl p-6">
+                  <div class="mb-6">
+                    <div class="flex justify-between items-center mb-3">
+                      <label class="text-sm font-medium text-slate-600">Electronics purchased per year</label>
+                      <div class="flex items-center gap-2">
+                        <span class="text-2xl font-bold text-blue-600" id="electronicsValue">2</span>
+                        <span class="text-sm text-slate-500">items</span>
+                        <span class="text-sm font-semibold text-blue-600" id="electronicsCO2">83.3 kg CO₂</span>
+                      </div>
+                    </div>
+                    <input type="range" min="0" max="10" value="2" class="slider w-full mb-3" id="electronicsSlider" 
+                           oninput="updateShoppingSlider('electronics', this.value)">
+                    <div class="flex justify-between text-xs text-slate-500">
+                      <span>0 items</span>
+                      <span>10 items</span>
+                    </div>
+                  </div>
+                  
+                  <div class="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <label class="block text-sm font-medium text-slate-600 mb-2">Manual Input</label>
+                      <input type="number" min="0" max="10" value="2" class="form-input" id="electronicsInput" 
+                             oninput="updateShoppingFromInput('electronics', this.value)">
+                    </div>
+                    <div>
+                      <label class="block text-sm font-medium text-slate-600 mb-2">Device Type</label>
+                      <select class="form-select" id="electronicsType" onchange="updateShoppingCalculation()">
+                        <option value="phone">Phone</option>
+                        <option value="laptop">Laptop</option>
+                        <option value="tv">TV</option>
+                        <option value="other">Other</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Household Appliances -->
+              <div class="mb-10">
+                <h5 class="text-lg font-semibold text-slate-700 mb-6 flex items-center">
+                  <span class="text-2xl mr-2">🏠</span>
+                  Household Appliances
+                </h5>
+                <div class="bg-green-50 rounded-xl p-6">
+                  <div class="mb-6">
+                    <div class="flex justify-between items-center mb-3">
+                      <label class="text-sm font-medium text-slate-600">Appliance usage per day (hours)</label>
+                      <div class="flex items-center gap-2">
+                        <span class="text-2xl font-bold text-green-600" id="appliancesValue">8</span>
+                        <span class="text-sm text-slate-500">hrs/day</span>
+                        <span class="text-sm font-semibold text-green-600" id="appliancesCO2">36.0 kg CO₂</span>
+                      </div>
+                    </div>
+                    <input type="range" min="0" max="24" value="8" class="slider w-full mb-3" id="appliancesSlider" 
+                           oninput="updateShoppingSlider('appliances', this.value)">
+                    <div class="flex justify-between text-xs text-slate-500">
+                      <span>0 hrs</span>
+                      <span>24 hrs</span>
+                    </div>
+                  </div>
+                  
+                  <div class="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <label class="block text-sm font-medium text-slate-600 mb-2">Manual Input (hours)</label>
+                      <input type="number" min="0" max="24" value="8" class="form-input" id="appliancesInput" 
+                             oninput="updateShoppingFromInput('appliances', this.value)">
+                    </div>
+                    <div>
+                      <label class="block text-sm font-medium text-slate-600 mb-2">Category</label>
+                      <select class="form-select" id="appliancesType" onchange="updateShoppingCalculation()">
+                        <option value="fridge">Fridge</option>
+                        <option value="washing">Washing Machine</option>
+                        <option value="ac">Air Conditioner</option>
+                        <option value="other">Other</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Online Deliveries -->
+              <div class="mb-10">
+                <h5 class="text-lg font-semibold text-slate-700 mb-6 flex items-center">
+                  <span class="text-2xl mr-2">📦</span>
+                  Online Deliveries / E-commerce
+                </h5>
+                <div class="bg-orange-50 rounded-xl p-6">
+                  <div class="mb-6">
+                    <div class="flex justify-between items-center mb-3">
+                      <label class="text-sm font-medium text-slate-600">Packages delivered per month</label>
+                      <div class="flex items-center gap-2">
+                        <span class="text-2xl font-bold text-orange-600" id="deliveriesValue">8</span>
+                        <span class="text-sm text-slate-500">packages</span>
+                        <span class="text-sm font-semibold text-orange-600" id="deliveriesCO2">16.0 kg CO₂</span>
+                      </div>
+                    </div>
+                    <input type="range" min="0" max="30" value="8" class="slider w-full mb-3" id="deliveriesSlider" 
+                           oninput="updateShoppingSlider('deliveries', this.value)">
+                    <div class="flex justify-between text-xs text-slate-500">
+                      <span>0 packages</span>
+                      <span>30 packages</span>
+                    </div>
+                  </div>
+                  
+                  <div class="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <label class="block text-sm font-medium text-slate-600 mb-2">Manual Input</label>
+                      <input type="number" min="0" max="30" value="8" class="form-input" id="deliveriesInput" 
+                             oninput="updateShoppingFromInput('deliveries', this.value)">
+                    </div>
+                    <div class="flex items-center justify-between">
+                      <span class="text-sm font-medium text-slate-600">Eco-friendly delivery preferred?</span>
+                      <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" class="sr-only peer" id="ecoDeliveryToggle" onchange="toggleEcoDelivery()">
+                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Upload Bill/Receipt Panel -->
+            <div class="mb-8">
+              <h4 class="text-xl font-semibold text-slate-700 mb-6 flex items-center">
+                <i class="fas fa-upload text-purple-500 mr-2"></i>
+                Upload Bill / Receipt (Optional)
+              </h4>
+              
+              <!-- Drag & Drop Area -->
+              <div class="mb-8">
+                <div class="drag-drop-area border-2 border-dashed border-purple-300 rounded-xl p-8 text-center bg-purple-50 hover:bg-purple-100 transition-colors cursor-pointer" 
+                     id="shoppingDropArea" onclick="document.getElementById('shoppingFileInput').click()">
+                  <div class="mb-4">
+                    <i class="fas fa-receipt text-6xl text-purple-500 mb-4"></i>
+                    <h4 class="text-xl font-semibold text-slate-700 mb-2">Drop your shopping receipts here</h4>
+                    <p class="text-slate-500 mb-4">or click to browse files</p>
+                    <div class="text-sm text-slate-400">Supports PDF, JPG, PNG files</div>
+                  </div>
+                  <input type="file" id="shoppingFileInput" multiple accept=".pdf,.jpg,.jpeg,.png" style="display: none;" onchange="handleShoppingFiles(this.files)">
+                </div>
+              </div>
+
+              <!-- Upload Progress -->
+              <div id="shoppingUploadProgress" class="hidden mb-8">
+                <div class="bg-purple-50 border border-purple-200 rounded-xl p-6">
+                  <div class="flex items-center justify-between mb-3">
+                    <span class="text-sm font-medium text-purple-700">
+                      <i class="fas fa-robot mr-2"></i>
+                      AI Processing Receipt...
+                    </span>
+                    <span class="text-sm text-purple-600" id="shoppingProgressText">0%</span>
+                  </div>
+                  <div class="w-full bg-purple-200 rounded-full h-3">
+                    <div class="bg-purple-600 h-3 rounded-full transition-all duration-300" id="shoppingProgressBar" style="width: 0%"></div>
+                  </div>
+                  <p class="text-xs text-purple-600 mt-2">Extracting item types, quantities, and estimating emissions...</p>
+                </div>
+              </div>
+
+              <!-- AI Extracted Data -->
+              <div id="shoppingExtractedData" class="hidden">
+                <h4 class="text-lg font-semibold text-slate-700 mb-4">
+                  <i class="fas fa-magic mr-2 text-purple-500"></i>
+                  AI Extracted Data
+                </h4>
+                <div class="bg-purple-50 border border-purple-200 rounded-xl p-6">
+                  <p class="text-sm text-purple-600 mb-4">
+                    <i class="fas fa-info-circle mr-1"></i>
+                    Review and adjust the extracted values if needed
+                  </p>
+                  <div class="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <label class="block text-sm font-medium text-slate-600 mb-2">Clothing Items</label>
+                      <input type="number" class="form-input" id="extractedClothing" oninput="updateFromShoppingExtracted()">
+                    </div>
+                    <div>
+                      <label class="block text-sm font-medium text-slate-600 mb-2">Electronics</label>
+                      <input type="number" class="form-input" id="extractedElectronics" oninput="updateFromShoppingExtracted()">
+                    </div>
+                    <div>
+                      <label class="block text-sm font-medium text-slate-600 mb-2">Household Items</label>
+                      <input type="number" class="form-input" id="extractedHousehold" oninput="updateFromShoppingExtracted()">
+                    </div>
+                    <div>
+                      <label class="block text-sm font-medium text-slate-600 mb-2">Total Amount</label>
+                      <input type="text" class="form-input" id="extractedAmount" readonly>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Real-Time Shopping Feedback -->
+        <div class="sticky top-8" data-aos="fade-left">
+          <div class="bg-gradient-to-br from-purple-50 to-pink-50 rounded-3xl p-8 shadow-xl border border-purple-200">
+            <!-- Results Card Header -->
+            <div class="text-center mb-8">
+              <h3 class="text-2xl font-bold text-slate-800 mb-2">Monthly Consumption Impact</h3>
+              <p class="text-lg text-purple-600 font-semibold" id="shoppingResultText">
+                Your monthly consumption footprint: <span id="shoppingMonthlyEmissions">159.3</span> kg CO₂
+              </p>
+            </div>
+            
+            <!-- Circular Progress Gauge -->
+            <div class="mb-8 flex justify-center">
+              <div class="relative w-48 h-48">
+                <svg class="w-48 h-48 transform -rotate-90" viewBox="0 0 100 100">
+                  <!-- Background circle -->
+                  <circle cx="50" cy="50" r="40" stroke="#f3e8ff" stroke-width="8" fill="none"/>
+                  <!-- Progress circle -->
+                  <circle cx="50" cy="50" r="40" stroke="url(#shoppingGradient)" stroke-width="8" fill="none"
+                          stroke-dasharray="251.2" stroke-dashoffset="125.6" 
+                          id="shoppingProgressCircle" class="transition-all duration-500 ease-out"/>
+                  <!-- Gradient definition -->
+                  <defs>
+                    <linearGradient id="shoppingGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" style="stop-color:#a855f7"/>
+                      <stop offset="100%" style="stop-color:#ec4899"/>
+                    </linearGradient>
+                  </defs>
+                </svg>
+                <!-- Center content -->
+                <div class="absolute inset-0 flex items-center justify-center">
+                  <div class="text-center">
+                    <div class="text-3xl font-black text-purple-600" id="shoppingGaugeValue">159.3</div>
+                    <div class="text-sm text-slate-600 font-medium">kg CO₂</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Shopping Category Breakdown -->
+            <div class="space-y-4 mb-8">
+              <h4 class="text-lg font-semibold text-slate-700 text-center mb-4">Breakdown by Category</h4>
+              
+              <div class="flex items-center justify-between p-3 bg-white rounded-lg shadow-sm">
+                <div class="flex items-center">
+                  <span class="text-2xl mr-3">👕</span>
+                  <span class="font-medium text-slate-700">Clothing</span>
+                </div>
+                <span class="font-bold text-pink-600" id="clothingTotalEmissions">24.0 kg</span>
+              </div>
+              
+              <div class="flex items-center justify-between p-3 bg-white rounded-lg shadow-sm">
+                <div class="flex items-center">
+                  <span class="text-2xl mr-3">📱</span>
+                  <span class="font-medium text-slate-700">Electronics</span>
+                </div>
+                <span class="font-bold text-blue-600" id="electronicsTotalEmissions">83.3 kg</span>
+              </div>
+              
+              <div class="flex items-center justify-between p-3 bg-white rounded-lg shadow-sm">
+                <div class="flex items-center">
+                  <span class="text-2xl mr-3">🏠</span>
+                  <span class="font-medium text-slate-700">Appliances</span>
+                </div>
+                <span class="font-bold text-green-600" id="appliancesTotalEmissions">36.0 kg</span>
+              </div>
+              
+              <div class="flex items-center justify-between p-3 bg-white rounded-lg shadow-sm">
+                <div class="flex items-center">
+                  <span class="text-2xl mr-3">📦</span>
+                  <span class="font-medium text-slate-700">Deliveries</span>
+                </div>
+                <span class="font-bold text-orange-600" id="deliveriesTotalEmissions">16.0 kg</span>
+              </div>
+            </div>
+
+            <!-- Shopping Hotspots -->
+            <div class="mb-8">
+              <h4 class="text-lg font-semibold text-slate-700 text-center mb-4">Shopping Hotspots</h4>
+              <div class="bg-red-50 border border-red-200 rounded-xl p-4">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-sm font-medium text-red-700">🔥 Top Contributor</span>
+                  <span class="text-sm font-bold text-red-600" id="topContributor">Electronics (52%)</span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span class="text-sm font-medium text-orange-700">🔸 Second Highest</span>
+                  <span class="text-sm font-bold text-orange-600" id="secondContributor">Appliances (23%)</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Shopping Pie Chart -->
+            <div class="mb-8">
+              <h4 class="text-lg font-semibold text-slate-700 text-center mb-4">Consumption Distribution</h4>
+              <div class="relative w-32 h-32 mx-auto">
+                <svg class="w-32 h-32 transform -rotate-90" viewBox="0 0 42 42">
+                  <!-- Electronics slice (largest) -->
+                  <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#3b82f6" stroke-width="3"
+                          stroke-dasharray="52 48" stroke-dashoffset="0" id="electronicsSlice"/>
+                  <!-- Appliances slice -->
+                  <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#16a34a" stroke-width="3"
+                          stroke-dasharray="23 77" stroke-dashoffset="-52" id="appliancesSlice"/>
+                  <!-- Clothing slice -->
+                  <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#ec4899" stroke-width="3"
+                          stroke-dasharray="15 85" stroke-dashoffset="-75" id="clothingSlice"/>
+                  <!-- Deliveries slice -->
+                  <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#f97316" stroke-width="3"
+                          stroke-dasharray="10 90" stroke-dashoffset="-90" id="deliveriesSlice"/>
+                </svg>
+                <div class="absolute inset-0 flex items-center justify-center">
+                  <span class="text-xs font-semibold text-slate-600">Shopping</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="mb-6">
+              <div class="flex justify-between text-sm text-slate-600 mb-2">
+                <span>Monthly Target: 200.0 kg CO₂</span>
+                <span id="shoppingProgressPercentage">80%</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-3">
+                <div class="bg-gradient-to-r from-purple-500 to-pink-500 h-3 rounded-full transition-all duration-500" 
+                     id="shoppingProgressBar" style="width: 80%"></div>
+              </div>
+            </div>
+
+            <!-- Quick Tips -->
+            <div class="bg-purple-50 border border-purple-200 rounded-xl p-4">
+              <h4 class="font-bold text-purple-700 mb-2">🛍️ Shopping Tip</h4>
+              <p class="text-sm text-purple-600" id="shoppingTip">
+                Choosing second-hand clothing could reduce your fashion footprint by 80%!
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Food Calculator Tab -->
     <div id="calculator" class="tab-content">
       <div class="max-w-4xl mx-auto" data-aos="fade-up">
@@ -1889,6 +2293,235 @@
     updateEnergyCalculation();
   }
 
+  // Shopping tracking functions
+  function updateShoppingSlider(type, value) {
+    document.getElementById(type + 'Value').textContent = value;
+    document.getElementById(type + 'Input').value = value;
+    updateShoppingCalculation();
+  }
+
+  function updateShoppingFromInput(type, value) {
+    if (value >= 0) {
+      document.getElementById(type + 'Slider').value = value;
+      document.getElementById(type + 'Value').textContent = value;
+      updateShoppingCalculation();
+    }
+  }
+
+  function updateShoppingCalculation() {
+    // Get all shopping input values
+    const clothing = parseFloat(document.getElementById('clothingSlider').value) || 0;
+    const clothingType = document.getElementById('clothingType').value;
+    const electronics = parseFloat(document.getElementById('electronicsSlider').value) || 0;
+    const electronicsType = document.getElementById('electronicsType').value;
+    const appliances = parseFloat(document.getElementById('appliancesSlider').value) || 0;
+    const appliancesType = document.getElementById('appliancesType').value;
+    const deliveries = parseFloat(document.getElementById('deliveriesSlider').value) || 0;
+    const hasEcoDelivery = document.getElementById('ecoDeliveryToggle').checked;
+
+    // Carbon emission factors
+    const clothingFactors = {
+      fast: 8.0,        // kg CO2 per item (fast fashion)
+      sustainable: 4.0, // kg CO2 per item (sustainable)
+      secondhand: 1.6   // kg CO2 per item (second-hand)
+    };
+
+    const electronicsFactors = {
+      phone: 70,    // kg CO2 per device per year
+      laptop: 300,  // kg CO2 per device per year
+      tv: 500,      // kg CO2 per device per year
+      other: 100    // kg CO2 per device per year
+    };
+
+    const appliancesFactors = {
+      fridge: 0.15,    // kg CO2 per hour
+      washing: 0.2,    // kg CO2 per hour
+      ac: 0.3,         // kg CO2 per hour
+      other: 0.18      // kg CO2 per hour
+    };
+
+    const deliveryEmissionFactor = 2.0; // kg CO2 per package
+
+    // Calculate emissions
+    const clothingEmissions = clothing * clothingFactors[clothingType];
+    const electronicsEmissions = (electronics * electronicsFactors[electronicsType]) / 12; // Monthly
+    const appliancesEmissions = appliances * appliancesFactors[appliancesType] * 30; // Monthly
+    let deliveriesEmissions = deliveries * deliveryEmissionFactor;
+
+    // Apply eco-delivery reduction
+    if (hasEcoDelivery) {
+      deliveriesEmissions *= 0.7; // 30% reduction for eco-friendly delivery
+    }
+
+    const totalEmissions = clothingEmissions + electronicsEmissions + appliancesEmissions + deliveriesEmissions;
+
+    // Update individual CO2 displays
+    animateValue('clothingCO2', clothingEmissions.toFixed(1) + ' kg CO₂');
+    animateValue('electronicsCO2', electronicsEmissions.toFixed(1) + ' kg CO₂');
+    animateValue('appliancesCO2', appliancesEmissions.toFixed(1) + ' kg CO₂');
+    animateValue('deliveriesCO2', deliveriesEmissions.toFixed(1) + ' kg CO₂');
+
+    // Update category totals
+    animateValue('clothingTotalEmissions', clothingEmissions.toFixed(1) + ' kg');
+    animateValue('electronicsTotalEmissions', electronicsEmissions.toFixed(1) + ' kg');
+    animateValue('appliancesTotalEmissions', appliancesEmissions.toFixed(1) + ' kg');
+    animateValue('deliveriesTotalEmissions', deliveriesEmissions.toFixed(1) + ' kg');
+
+    // Update main displays
+    animateValue('shoppingMonthlyEmissions', totalEmissions.toFixed(1));
+    animateValue('shoppingGaugeValue', totalEmissions.toFixed(1));
+
+    // Update progress gauge
+    updateShoppingProgressGauge(totalEmissions);
+    
+    // Update progress bar
+    const monthlyTarget = 200.0;
+    const percentage = Math.min((totalEmissions / monthlyTarget) * 100, 100);
+    document.getElementById('shoppingProgressPercentage').textContent = percentage.toFixed(0) + '%';
+    document.getElementById('shoppingProgressBar').style.width = percentage + '%';
+
+    // Update pie chart
+    updateShoppingPieChart(clothingEmissions, electronicsEmissions, appliancesEmissions, deliveriesEmissions);
+
+    // Update hotspots
+    updateShoppingHotspots(clothingEmissions, electronicsEmissions, appliancesEmissions, deliveriesEmissions);
+
+    // Update tip
+    updateShoppingTip(clothingType, hasEcoDelivery, electronicsEmissions, totalEmissions);
+  }
+
+  function updateShoppingProgressGauge(value) {
+    const maxValue = 300; // Max expected monthly shopping emissions
+    const percentage = Math.min(value / maxValue, 1);
+    const circumference = 251.2; // 2 * π * 40
+    const offset = circumference - (percentage * circumference);
+    
+    const circle = document.getElementById('shoppingProgressCircle');
+    if (circle) {
+      circle.style.strokeDashoffset = offset;
+    }
+  }
+
+  function updateShoppingPieChart(clothing, electronics, appliances, deliveries) {
+    const total = clothing + electronics + appliances + deliveries || 1;
+    const clothingPercent = (clothing / total) * 100;
+    const electronicsPercent = (electronics / total) * 100;
+    const appliancesPercent = (appliances / total) * 100;
+    const deliveriesPercent = (deliveries / total) * 100;
+
+    // Update pie chart slices
+    document.getElementById('electronicsSlice').style.strokeDasharray = `${electronicsPercent} ${100 - electronicsPercent}`;
+    document.getElementById('appliancesSlice').style.strokeDasharray = `${appliancesPercent} ${100 - appliancesPercent}`;
+    document.getElementById('appliancesSlice').style.strokeDashoffset = `-${electronicsPercent}`;
+    document.getElementById('clothingSlice').style.strokeDasharray = `${clothingPercent} ${100 - clothingPercent}`;
+    document.getElementById('clothingSlice').style.strokeDashoffset = `-${electronicsPercent + appliancesPercent}`;
+    document.getElementById('deliveriesSlice').style.strokeDasharray = `${deliveriesPercent} ${100 - deliveriesPercent}`;
+    document.getElementById('deliveriesSlice').style.strokeDashoffset = `-${electronicsPercent + appliancesPercent + clothingPercent}`;
+  }
+
+  function updateShoppingHotspots(clothing, electronics, appliances, deliveries) {
+    const categories = [
+      { name: 'Electronics', value: electronics },
+      { name: 'Appliances', value: appliances },
+      { name: 'Clothing', value: clothing },
+      { name: 'Deliveries', value: deliveries }
+    ];
+    
+    // Sort by emissions (highest first)
+    categories.sort((a, b) => b.value - a.value);
+    
+    const total = clothing + electronics + appliances + deliveries || 1;
+    const topPercent = ((categories[0].value / total) * 100).toFixed(0);
+    const secondPercent = ((categories[1].value / total) * 100).toFixed(0);
+    
+    document.getElementById('topContributor').textContent = `${categories[0].name} (${topPercent}%)`;
+    document.getElementById('secondContributor').textContent = `${categories[1].name} (${secondPercent}%)`;
+  }
+
+  function updateShoppingTip(clothingType, hasEcoDelivery, electronicsEmissions, totalEmissions) {
+    const tipElement = document.getElementById('shoppingTip');
+    if (!tipElement) return;
+    
+    if (clothingType === 'fast' && electronicsEmissions > 50) {
+      tipElement.textContent = 'Choosing second-hand clothing and extending device lifespan could significantly reduce your footprint!';
+    } else if (clothingType === 'fast') {
+      tipElement.textContent = 'Switching to second-hand or sustainable fashion could reduce your clothing footprint by up to 80%!';
+    } else if (!hasEcoDelivery && totalEmissions > 150) {
+      tipElement.textContent = 'Choosing eco-friendly delivery options could reduce your shipping emissions by 30%!';
+    } else if (electronicsEmissions > 80) {
+      tipElement.textContent = 'Consider extending the lifespan of your electronics to reduce replacement emissions.';
+    } else if (totalEmissions < 100) {
+      tipElement.textContent = 'Excellent! Your consumption habits have a relatively low carbon footprint.';
+    } else {
+      tipElement.textContent = 'Consider buying less frequently and choosing sustainable options when possible.';
+    }
+  }
+
+  function toggleEcoDelivery() {
+    updateShoppingCalculation();
+  }
+
+  function handleShoppingFiles(files) {
+    const progressDiv = document.getElementById('shoppingUploadProgress');
+    const extractedDiv = document.getElementById('shoppingExtractedData');
+    const progressBar = document.getElementById('shoppingProgressBar');
+    const progressText = document.getElementById('shoppingProgressText');
+    
+    if (files.length === 0) return;
+    
+    // Show progress
+    progressDiv.classList.remove('hidden');
+    
+    // Simulate AI processing
+    let progress = 0;
+    const interval = setInterval(() => {
+      progress += Math.random() * 12;
+      if (progress >= 100) {
+        progress = 100;
+        clearInterval(interval);
+        
+        // Show extracted data after processing
+        setTimeout(() => {
+          progressDiv.classList.add('hidden');
+          extractedDiv.classList.remove('hidden');
+          
+          // Simulate extracted values
+          document.getElementById('extractedClothing').value = 2;
+          document.getElementById('extractedElectronics').value = 1;
+          document.getElementById('extractedHousehold').value = 3;
+          document.getElementById('extractedAmount').value = '$245.67';
+          
+          // Update calculations with extracted data
+          updateFromShoppingExtracted();
+        }, 500);
+      }
+      
+      progressBar.style.width = progress + '%';
+      progressText.textContent = Math.round(progress) + '%';
+    }, 250);
+  }
+
+  function updateFromShoppingExtracted() {
+    const clothing = parseFloat(document.getElementById('extractedClothing').value) || 0;
+    const electronics = parseFloat(document.getElementById('extractedElectronics').value) || 0;
+    const household = parseFloat(document.getElementById('extractedHousehold').value) || 0;
+    
+    // Update manual inputs
+    document.getElementById('clothingSlider').value = clothing;
+    document.getElementById('clothingInput').value = clothing;
+    document.getElementById('clothingValue').textContent = clothing;
+    
+    document.getElementById('electronicsSlider').value = electronics;
+    document.getElementById('electronicsInput').value = electronics;
+    document.getElementById('electronicsValue').textContent = electronics;
+    
+    document.getElementById('appliancesSlider').value = household;
+    document.getElementById('appliancesInput').value = household;
+    document.getElementById('appliancesValue').textContent = household;
+    
+    updateShoppingCalculation();
+  }
+
   // Update slider values
   function updateValue(type, value) {
     document.getElementById(type + 'Value').textContent = value + ' km';
@@ -2032,6 +2665,7 @@
   updateFoodCalculation();
   updateTransportCalculation();
   updateEnergyCalculation();
+  updateShoppingCalculation();
 </script>
 
 {% endblock %}
