@@ -77,7 +77,8 @@ function updateCurrentSectionDisplay(section) {
   
   if (sectionTitle && sectionIcon && sectionEmissions) {
     const dayData = carbonTracker.getCurrentDateData();
-    const emissions = dayData.emissions[section] || 0;
+    const emissionsKey = section === 'transportation' ? 'transport' : section;
+    const emissions = dayData.emissions[emissionsKey] || 0;
     
     const sectionConfig = {
       transportation: {
@@ -117,6 +118,108 @@ function updateCurrentSectionDisplay(section) {
     
     // Show/hide appropriate section details
     showSectionDetails(section);
+
+    // Populate section-specific details when available
+    if (section === 'food') {
+      const meatMeals = dayData.food.meatMeals || 0;
+      const dairyServings = dayData.food.dairyServings || 0;
+      const localProduce = dayData.food.localProduce !== false;
+
+      const meatFactor = carbonTracker.emissionFactors.food.beef;
+      const dairyFactor = carbonTracker.emissionFactors.food.dairy;
+
+      const meatEl = document.getElementById('meatEmissions');
+      const dairyEl = document.getElementById('dairyEmissions');
+      const localEl = document.getElementById('localProduceStatus');
+
+      if (meatEl) meatEl.textContent = (meatMeals * meatFactor).toFixed(1) + ' kg';
+      if (dairyEl) dairyEl.textContent = (dairyServings * dairyFactor).toFixed(1) + ' kg';
+      if (localEl) localEl.textContent = localProduce ? 'Yes' : 'No';
+    } else if (section === 'energy') {
+      const electricityKwh = dayData.energy.electricity || 0;
+      const gasCubicMeters = dayData.energy.gas || 0;
+      const heatingHours = dayData.energy.heating || 0;
+
+      const electricityFactor = carbonTracker.emissionFactors.energy.electricity;
+      const gasFactor = carbonTracker.emissionFactors.energy.gas;
+      const heatingFactor = carbonTracker.emissionFactors.energy.heating;
+
+      const electricityEl = document.getElementById('electricityEmissions');
+      const gasEl = document.getElementById('gasEmissions');
+      const heatingEl = document.getElementById('heatingEmissions');
+
+      if (electricityEl) electricityEl.textContent = (electricityKwh * electricityFactor).toFixed(1) + ' kg';
+      if (gasEl) gasEl.textContent = (gasCubicMeters * gasFactor).toFixed(1) + ' kg';
+      if (heatingEl) heatingEl.textContent = (heatingHours * heatingFactor).toFixed(1) + ' kg';
+    } else if (section === 'shopping') {
+      // Sum quantities by category from current day data
+      const items = Array.isArray(dayData.shopping.items) ? dayData.shopping.items : [];
+      const quantities = items.reduce((acc, item) => {
+        acc[item.category] = (acc[item.category] || 0) + (item.quantity || 0);
+        return acc;
+      }, {});
+
+      const clothingQty = quantities.clothing || 0;
+      const electronicsQty = quantities.electronics || 0;
+      const otherQty = quantities.general || 0;
+
+      const clothingFactor = carbonTracker.emissionFactors.shopping.clothing;
+      const electronicsFactor = carbonTracker.emissionFactors.shopping.electronics;
+      const otherFactor = carbonTracker.emissionFactors.shopping.general;
+
+      const clothingEl = document.getElementById('clothingEmissions');
+      const electronicsEl = document.getElementById('electronicsEmissions');
+      const otherEl = document.getElementById('otherShoppingEmissions');
+
+      if (clothingEl) clothingEl.textContent = (clothingQty * clothingFactor).toFixed(1) + ' kg';
+      if (electronicsEl) electronicsEl.textContent = (electronicsQty * electronicsFactor).toFixed(1) + ' kg';
+      if (otherEl) otherEl.textContent = (otherQty * otherFactor).toFixed(1) + ' kg';
+    } else if (section === 'waste') {
+      const generalKg = dayData.waste.general || 0;
+      const recyclingKg = dayData.waste.recycling || 0;
+      const compostKg = dayData.waste.compost || 0;
+
+      const generalFactor = carbonTracker.emissionFactors.waste.general;
+      const recyclingFactor = carbonTracker.emissionFactors.waste.recycling;
+      const compostFactor = carbonTracker.emissionFactors.waste.compost;
+
+      const generalEl = document.getElementById('generalWasteEmissions');
+      const recyclingEl = document.getElementById('recyclingEmissions');
+      const compostEl = document.getElementById('compostEmissions');
+
+      if (generalEl) generalEl.textContent = (generalKg * generalFactor).toFixed(1) + ' kg';
+      if (recyclingEl) recyclingEl.textContent = (recyclingKg * recyclingFactor).toFixed(1) + ' kg';
+      if (compostEl) compostEl.textContent = (compostKg * compostFactor).toFixed(1) + ' kg';
+    } else if (section === 'transportation') {
+      // Compute per-source transport emissions
+      const commute = dayData.transport.commute;
+      let commuteEmission = 0;
+      if (commute.mode === 'car') {
+        commuteEmission = commute.distance * carbonTracker.emissionFactors.transport.car[commute.fuelType];
+      } else if (carbonTracker.emissionFactors.transport[commute.mode]) {
+        commuteEmission = commute.distance * carbonTracker.emissionFactors.transport[commute.mode];
+      }
+
+      const additionalCarEmission = (dayData.transport.car.enabled ? dayData.transport.car.km : 0)
+        * carbonTracker.emissionFactors.transport.car.petrol;
+
+      const publicEmission = (dayData.transport.public.enabled ? dayData.transport.public.km : 0)
+        * carbonTracker.emissionFactors.transport.bus;
+
+      const flightFactor = carbonTracker.emissionFactors.transport.flight[dayData.transport.flight.type];
+      const flightEmission = (dayData.transport.flight.enabled ? dayData.transport.flight.hours : 0)
+        * 500 * flightFactor;
+
+      const commuteEl = document.getElementById('commuteEmissions');
+      const carEl = document.getElementById('additionalCarEmissions');
+      const publicEl = document.getElementById('publicTransportEmissions');
+      const flightEl = document.getElementById('flightEmissions');
+
+      if (commuteEl) commuteEl.textContent = commuteEmission.toFixed(1) + ' kg';
+      if (carEl) carEl.textContent = additionalCarEmission.toFixed(1) + ' kg';
+      if (publicEl) publicEl.textContent = publicEmission.toFixed(1) + ' kg';
+      if (flightEl) flightEl.textContent = flightEmission.toFixed(1) + ' kg';
+    }
   }
 }
 
@@ -130,8 +233,18 @@ function showSectionDetails(section) {
     }
   });
   
+  // Map section name to detail container id
+  const detailsIdMap = {
+    transportation: 'transportDetails',
+    food: 'foodDetails',
+    energy: 'energyDetails',
+    shopping: 'shoppingDetails',
+    waste: 'wasteDetails'
+  };
+  const targetId = detailsIdMap[section] || (section + 'Details');
+  
   // Show current section details
-  const currentDetails = document.getElementById(section + 'Details');
+  const currentDetails = document.getElementById(targetId);
   if (currentDetails) {
     currentDetails.classList.remove('hidden');
   }
